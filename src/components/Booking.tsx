@@ -1,84 +1,81 @@
+import { useState } from 'react';
+
 export default function Booking() {
+  const [submitted, setSubmitted] = useState(false);
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 3000);
+  };
+
   return (
-    <section id="contact" className="py-20 bg-amber-50">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <span className="text-amber-600 font-semibold tracking-wider">REZERVASYON</span>
-          <h2 className="text-4xl font-bold mt-3 text-gray-900">Konaklamanızı Planlayın</h2>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            Aşağıdaki formu kullanarak konaklama tercihlerinizi oluşturabilirsiniz.
-          </p>
-        </div>
+    <section id="contact" className="py-20 bg-gradient-to-br from-amber-50 to-orange-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12">
+          <div className="space-y-8">
+            <div>
+              <div className="inline-block px-4 py-2 bg-amber-100 rounded-full mb-4">
+                <span className="text-amber-600 font-medium text-sm">İLETİŞİM & REZERVASYON</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"><span className="text-amber-500">Hemen</span> Rezervasyon Yapın</h2>
+              <p className="text-lg text-gray-600">Tatilinizi planlamaya bugün başlayın! Profesyonel ekibimiz size en uygun seçenekleri sunmak için hazır.</p>
+            </div>
 
-        <div className="bg-white rounded-3xl shadow-xl p-6 md:p-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <label className="block">
-              <span className="text-sm font-semibold text-gray-700">Giriş Tarihi</span>
-              <input type="date" className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-amber-500" />
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold text-gray-700">Çıkış Tarihi</span>
-              <input type="date" className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-amber-500" />
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold text-gray-700">Oda Tipi</span>
-              <select className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 bg-white outline-none focus:border-amber-500" defaultValue="">
-                <option value="" disabled>Oda seçiniz</option>
-                <option>Standart Oda</option>
-                <option>Deluxe Oda</option>
-                <option>Aile Odası</option>
-              </select>
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold text-gray-700">Yetişkin</span>
-              <select className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 bg-white outline-none focus:border-amber-500" defaultValue="2">
-                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-              </select>
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold text-gray-700">Çocuk</span>
-              <select className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 bg-white outline-none focus:border-amber-500" defaultValue="0">
-                <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
-              </select>
-            </label>
-            <label className="block">
-              <span className="text-sm font-semibold text-gray-700">Ad Soyad</span>
-              <input type="text" placeholder="Adınız ve soyadınız" className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-amber-500" />
-            </label>
+            <div className="space-y-4">
+              <div className="p-6 bg-white rounded-2xl shadow-lg">
+                <h3 className="font-semibold text-gray-900 mb-2">☎ Telefon</h3>
+                <p className="text-gray-600">+90 (212) 555 0123</p>
+                <p className="text-gray-600">+90 (555) 123 4567</p>
+              </div>
+              <div className="p-6 bg-white rounded-2xl shadow-lg">
+                <h3 className="font-semibold text-gray-900 mb-2">✉ E-posta</h3>
+                <p className="text-gray-600">rezervasyon@paradisehotel.com</p>
+                <p className="text-gray-600">bilgi@paradisehotel.com</p>
+              </div>
+              <div className="p-6 bg-white rounded-2xl shadow-lg">
+                <h3 className="font-semibold text-gray-900 mb-2">⌖ Adres</h3>
+                <p className="text-gray-600">Deniz Caddesi No: 123</p>
+                <p className="text-gray-600">İstanbul, Türkiye</p>
+              </div>
+            </div>
+
+            <div className="p-6 bg-white rounded-2xl shadow-lg">
+              <h3 className="font-semibold text-gray-900 mb-4">Çalışma Saatleri</h3>
+              <div className="space-y-2 text-gray-600">
+                <div className="flex justify-between"><span>Hafta İçi</span><span className="font-medium">08:00 - 22:00</span></div>
+                <div className="flex justify-between"><span>Hafta Sonu</span><span className="font-medium">09:00 - 21:00</span></div>
+                <div className="flex justify-between"><span>Resmi Tatiller</span><span className="font-medium">Kapalı</span></div>
+              </div>
+            </div>
           </div>
 
-          <label className="block mt-6">
-            <span className="text-sm font-semibold text-gray-700">Notunuz</span>
-            <textarea rows={4} placeholder="Özel taleplerinizi veya rezervasyon notunuzu yazabilirsiniz." className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-amber-500 resize-none" />
-          </label>
-
-          <div className="mt-8 text-center">
-            <button type="button" className="px-8 py-3.5 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-semibold transition">
-              Rezervasyon Talebi Oluştur
-            </button>
-            <p className="mt-3 text-xs text-gray-500">Bu form şu anda ön talep arayüzüdür; gönderim bağlantısı iletişim bilgileri eklendiğinde etkinleştirilebilir.</p>
-          </div>
-        </div>
-
-        <div className="mt-16 text-center">
-          <span className="text-amber-600 font-semibold tracking-wider">İLETİŞİM</span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-3 text-gray-900">Daha Fazla Bilgi İçin Bize Ulaşın</h2>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            Gölköy Yaşam Resort hakkında sorularınız, konaklama seçenekleri ve rezervasyon talepleriniz için bizimle iletişime geçebilirsiniz.
-          </p>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="bg-white rounded-2xl p-6 shadow-sm">
-              <div className="text-2xl mb-2">☎</div><h3 className="font-bold text-gray-900">Telefon</h3>
-              <p className="mt-2 text-sm text-gray-500">Telefon bilgisi eklenecek</p>
-            </div>
-            <div className="bg-white rounded-2xl p-6 shadow-sm">
-              <div className="text-2xl mb-2">✉</div><h3 className="font-bold text-gray-900">E-posta</h3>
-              <p className="mt-2 text-sm text-gray-500">E-posta bilgisi eklenecek</p>
-            </div>
-            <div className="bg-white rounded-2xl p-6 shadow-sm">
-              <div className="text-2xl mb-2">⌖</div><h3 className="font-bold text-gray-900">Adres</h3>
-              <p className="mt-2 text-sm text-gray-500">Adres bilgisi eklenecek</p>
-            </div>
+          <div className="bg-white rounded-3xl p-8 shadow-2xl">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">Rezervasyon Formu</h3>
+            {submitted ? (
+              <div className="text-center py-12">
+                <div className="text-5xl mb-5">✓</div>
+                <h4 className="text-2xl font-bold text-gray-900 mb-2">Rezervasyon Alındı!</h4>
+                <p className="text-gray-600">En kısa sürede sizinle iletişime geçeceğiz.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Adınız Soyadınız</span><input required type="text" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="Adınız" /></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">E-posta Adresiniz</span><input required type="email" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="ornek@email.com" /></label>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Telefon Numaranız</span><input required type="tel" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="+90 5XX XXX XX XX" /></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Oda Tipi</span><select className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option>Seçiniz</option><option>Standart Oda</option><option>Superior Oda</option><option>Deluxe Oda</option><option>Suit</option></select></label>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Giriş Tarihi</span><input required type="date" className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Çıkış Tarihi</span><input required type="date" className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
+                </div>
+                <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Misafir Sayısı</span><select className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option>1 Kişi</option><option>2 Kişi</option><option>3 Kişi</option><option>4 Kişi</option><option>5+ Kişi</option></select></label>
+                <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Mesajınız</span><textarea rows={4} className="w-full px-4 py-3 border border-slate-200 rounded-xl resize-none" placeholder="Özel isteklerinizi yazabilirsiniz..." /></label>
+                <button type="submit" className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all">Rezervasyon Gönder →</button>
+              </form>
+            )}
           </div>
         </div>
       </div>
