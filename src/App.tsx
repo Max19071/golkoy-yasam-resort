@@ -7,8 +7,13 @@ import Gallery from './components/Gallery';
 import Booking from './components/Booking';
 import GuestExperiences from './components/GuestExperiences';
 import Footer from './components/Footer';
-
+import AdminPanel from './components/AdminPanel';
 export default function App() {
+    const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
+
+  if (isAdmin) {
+    return <AdminPanel />;
+  }
   return (
     <div className="min-h-screen">
       <Navbar />
