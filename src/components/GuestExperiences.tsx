@@ -3,7 +3,18 @@ import { useEffect, useState } from "react";
 const SUPABASE_URL="https://pekpyiyivttrjjxsrarx.supabase.co";
 const SUPABASE_KEY="sb_publishable_byqYtROGi5NKkIWiZJ07uw_RMPhuMzS";
 
-type Review={id:number;guest_name:string;visit_type:string;rating:number;review_text:string;photo_urls:string[]};\n\nfunction ReviewPhotos({paths,name}:{paths:string[];name:string}){\n const [index,setIndex]=useState(0);\n const [urls,setUrls]=useState<string[]>([]);\n useEffect(()=>{let active=true; Promise.all((paths||[]).map(async path=>{\n  const r=await fetch(`${SUPABASE_URL}/storage/v1/object/sign/guest-photos/${encodeURIComponent(path)}`,{method:"POST",headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({expiresIn:3600})});\n  if(!r.ok)return ""; const d=await r.json(); return d.signedURL?`${SUPABASE_URL}/storage/v1${d.signedURL}`:"";\n })).then(x=>{if(active)setUrls(x.filter(Boolean))}); return()=>{active=false}},[paths]);\n if(!urls.length)return null;\n return <div className="relative mb-5 -mx-7 -mt-7 overflow-hidden rounded-t-3xl bg-slate-100"><img src={urls[index]} alt={`${name} misafir fotoğrafı`} className="w-full h-64 object-cover"/>{urls.length>1&&<><button type="button" onClick={()=>setIndex(i=>(i-1+urls.length)%urls.length)} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/55 text-white text-3xl flex items-center justify-center">‹</button><button type="button" onClick={()=>setIndex(i=>(i+1)%urls.length)} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/55 text-white text-3xl flex items-center justify-center">›</button><span className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-xs">{index+1} / {urls.length}</span></>}</div>\n}
+type Review={id:number;guest_name:string;visit_type:string;rating:number;review_text:string;photo_urls:string[]};
+
+function ReviewPhotos({paths,name}:{paths:string[];name:string}){
+ const [index,setIndex]=useState(0);
+ const [urls,setUrls]=useState<string[]>([]);
+ useEffect(()=>{let active=true; Promise.all((paths||[]).map(async path=>{
+  const r=await fetch(`${SUPABASE_URL}/storage/v1/object/sign/guest-photos/${encodeURIComponent(path)}`,{method:"POST",headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({expiresIn:3600})});
+  if(!r.ok)return ""; const d=await r.json(); return d.signedURL?`${SUPABASE_URL}/storage/v1${d.signedURL}`:"";
+ })).then(x=>{if(active)setUrls(x.filter(Boolean))}); return()=>{active=false}},[paths]);
+ if(!urls.length)return null;
+ return <div className="relative mb-5 -mx-7 -mt-7 overflow-hidden rounded-t-3xl bg-slate-100"><img src={urls[index]} alt={`${name} misafir fotoğrafı`} className="w-full h-64 object-cover"/>{urls.length>1&&<><button type="button" onClick={()=>setIndex(i=>(i-1+urls.length)%urls.length)} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/55 text-white text-3xl flex items-center justify-center">‹</button><button type="button" onClick={()=>setIndex(i=>(i+1)%urls.length)} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/55 text-white text-3xl flex items-center justify-center">›</button><span className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-xs">{index+1} / {urls.length}</span></>}</div>
+}
 
 export default function GuestExperiences(){
  const [open,setOpen]=useState(false);
