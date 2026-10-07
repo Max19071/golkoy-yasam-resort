@@ -4,6 +4,22 @@ export default function Booking() {
   const [submitted, setSubmitted] = useState(false);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const subject = encodeURIComponent("Gölköy Yaşam Resort - Yeni Rezervasyon Talebi");
+    const body = encodeURIComponent(
+      "Ad Soyad: " + data.get("name") + "\n" +
+      "E-posta: " + data.get("email") + "\n" +
+      "Telefon: " + data.get("phone") + "\n" +
+      "Oda Tipi: " + data.get("roomType") + "\n" +
+      "Giriş Tarihi: " + data.get("checkIn") + "\n" +
+      "Çıkış Tarihi: " + data.get("checkOut") + "\n" +
+      "Misafir Sayısı: " + data.get("guests") + "\n\n" +
+      "Mesaj: " + (data.get("message") || "-")
+    );
+
+    window.location.href = `mailto:info@golkoyyasamresort.com?subject=${subject}&body=${body}`;
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000);
   };
@@ -55,19 +71,19 @@ export default function Booking() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
-                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Adınız Soyadınız</span><input required type="text" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="Adınız" /></label>
-                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">E-posta Adresiniz</span><input required type="email" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="ornek@email.com" /></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Adınız Soyadınız</span><input required name="name" type="text" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="Adınız" /></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">E-posta Adresiniz</span><input required name="email" type="email" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="ornek@email.com" /></label>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Telefon Numaranız</span><input required type="tel" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="+90 5XX XXX XX XX" /></label>
-                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Oda Tipi</span><select className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option>Seçiniz</option><option>Standart Oda</option><option>Superior Oda</option><option>Deluxe Oda</option><option>Suit</option></select></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Telefon Numaranız</span><input required name="phone" type="tel" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="+90 5XX XXX XX XX" /></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Oda Tipi</span><select name="roomType" required className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option value="">Seçiniz</option><option>Standart Oda</option><option>Superior Oda</option><option>Deluxe Oda</option><option>Suit</option></select></label>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Giriş Tarihi</span><input required type="date" className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
-                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Çıkış Tarihi</span><input required type="date" className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Giriş Tarihi</span><input required name="checkIn" type="date" className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Çıkış Tarihi</span><input required name="checkOut" type="date" className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
                 </div>
-                <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Misafir Sayısı</span><select className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option>1 Kişi</option><option>2 Kişi</option><option>3 Kişi</option><option>4 Kişi</option><option>5+ Kişi</option></select></label>
-                <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Mesajınız</span><textarea rows={4} className="w-full px-4 py-3 border border-slate-200 rounded-xl resize-none" placeholder="Özel isteklerinizi yazabilirsiniz..." /></label>
+                <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Misafir Sayısı</span><select name="guests" className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option>1 Kişi</option><option>2 Kişi</option><option>3 Kişi</option><option>4 Kişi</option><option>5+ Kişi</option></select></label>
+                <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Mesajınız</span><textarea name="message" rows={4} className="w-full px-4 py-3 border border-slate-200 rounded-xl resize-none" placeholder="Özel isteklerinizi yazabilirsiniz..." /></label>
                 <button type="submit" className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all">Rezervasyon Gönder →</button>
               </form>
             )}
