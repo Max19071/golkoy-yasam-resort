@@ -28,8 +28,7 @@ export default function Booking() {
               </div>
               <div className="p-6 bg-white rounded-2xl shadow-lg">
                 <h3 className="font-semibold text-gray-900 mb-2">✉ E-posta</h3>
-                <p className="text-gray-600">rezervasyon@paradisehotel.com</p>
-                <p className="text-gray-600">bilgi@paradisehotel.com</p>
+                <p className="text-gray-600">info@golkoyyasamresort.com</p>
               </div>
               <div className="p-6 bg-white rounded-2xl shadow-lg">
                 <h3 className="font-semibold text-gray-900 mb-2">⌖ Adres</h3>
