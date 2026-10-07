@@ -21,7 +21,7 @@ export default function Footer() {
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-6">İletişim</h3>
-            <ul className="space-y-4 text-gray-400"><li>⌖ Deniz Caddesi No: 123<br/>İstanbul, Türkiye</li><li>☎ +90 (212) 555 0123</li><li>✉ rezervasyon@paradisehotel.com</li></ul>
+            <ul className="space-y-4 text-gray-400"><li>⌖ Gölköy 65/A<br/>Kastamonu Merkez</li><li>☎ 0366 252 85 89</li><li>✉ info@golkoyyasamresort.com</li></ul>
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-slate-700">
