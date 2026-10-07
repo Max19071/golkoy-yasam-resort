@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div className="space-y-6">
-            <div className="flex items-center gap-3"><div className="bg-white rounded-xl p-1"><ResortLogo className="w-16 h-14"/></div><div className="text-2xl font-bold">Gölköy Yaşam Resort</div></div>
+            <div className="flex items-center gap-3"><div className="bg-white rounded-xl p-1"><ResortLogo className="w-16 h-auto"/></div><div className="text-2xl font-bold">Gölköy Yaşam Resort</div></div>
             <p className="text-gray-400 leading-relaxed">25 yıldan fazla deneyimimizle, misafirlerimize unutulmaz tatil deneyimleri sunuyoruz. Konfor, kalite ve hizmet bir arada.</p>
             <div className="flex gap-4"><a href="#" className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-amber-500">X</a><a href="#" className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-amber-500">◎</a><a href="#" className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-amber-500">f</a></div>
           </div>
