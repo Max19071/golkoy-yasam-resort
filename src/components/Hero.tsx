@@ -1,5 +1,5 @@
 export default function Hero(){
- return <section id="home" className="min-h-screen flex items-center pt-24 bg-[linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.48)),url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600')] bg-cover bg-center">
+ return <section id="home" className="min-h-screen flex items-center pt-24 bg-[linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.48)),url('./etkili%20havuzdan%20otel.jpg')] bg-cover bg-center">
   <div className="max-w-7xl mx-auto px-4 text-white">
    <p className="uppercase tracking-[0.3em] text-sm mb-4">Konfor · Huzur · Doğa</p>
    <h1 className="text-5xl md:text-7xl font-bold max-w-4xl leading-tight">Gölköy Yaşam Resort</h1>
