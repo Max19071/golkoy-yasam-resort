@@ -2,6 +2,7 @@ import { useState } from "react";
 
 const items=["Restoran","Açık Havuz","Oda Servisi","Transfer","Ücretsiz Wi‑Fi","Resepsiyon"];
 const restaurantImage="./etkili%20restorant%20sahne.jpg";
+const restaurantDetailImage="./etkili%20restorant.jpg";
 
 export default function Services(){
  const [restaurantOpen,setRestaurantOpen]=useState(false);
@@ -16,7 +17,7 @@ export default function Services(){
   {restaurantOpen&&<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4" onClick={()=>setRestaurantOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setRestaurantOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
-    <img src={restaurantImage} alt="Gölköy Yaşam Resort restoran ve sahne" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <img src={restaurantDetailImage} alt="Gölköy Yaşam Resort restoran" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
    </div>
   </div>}
  </div></section>
