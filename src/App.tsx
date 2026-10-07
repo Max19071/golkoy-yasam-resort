@@ -5,6 +5,7 @@ import Rooms from './components/Rooms';
 import Services from './components/Services';
 import Gallery from './components/Gallery';
 import Booking from './components/Booking';
+import GuestExperiences from './components/GuestExperiences';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
       <Rooms />
       <Services />
       <Gallery />
+      <GuestExperiences />
       <Booking />
       <Footer />
     </div>
