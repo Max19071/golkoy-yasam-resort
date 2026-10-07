@@ -32,8 +32,7 @@ export default function Booking() {
               </div>
               <div className="p-6 bg-white rounded-2xl shadow-lg">
                 <h3 className="font-semibold text-gray-900 mb-2">⌖ Adres</h3>
-                <p className="text-gray-600">Deniz Caddesi No: 123</p>
-                <p className="text-gray-600">İstanbul, Türkiye</p>
+                <p className="text-gray-600">Gölköy 65/A Kastamonu Merkez</p>
               </div>
             </div>
 
