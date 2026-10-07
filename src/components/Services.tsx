@@ -6,6 +6,7 @@ const poolImage="./etkili%20havuz.jpg";
 const manejImage="./etkili%20manej%20ikili.jpg";
 const courtImage="./etkili%20kort.jpg";
 const natureImages=["./etkili%20do%C4%9Fal%20ya%C5%9Fam.jpg","./etkili%20do%C4%9Fal%20ya%C5%9Fam1.jpg"];
+const receptionImage="./etkili%20giri%C5%9F.jpg";
 
 export default function Services(){
  const [restaurantOpen,setRestaurantOpen]=useState(false);
@@ -31,10 +32,10 @@ export default function Services(){
     <img src={poolImage} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Açık Havuz</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
-   :x==="Doğal Yaşam"?
+   :x==="Ücretsiz Wi-Fi"?
    <button key={x} type="button" onClick={openNature} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={natureImages[0]} alt="Gölköy Yaşam Resort doğal yaşam" className="w-full h-48 object-cover"/>
-    <div className="p-6"><h3 className="text-xl font-semibold">Doğal Yaşam</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
+    <img src={natureImages[0]} alt="Gölköy Yaşam Resort ücretsiz Wi-Fi ve doğal yaşam alanı" className="w-full h-48 object-cover"/>
+    <div className="p-6"><h3 className="text-xl font-semibold">Ücretsiz Wi-Fi</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Tenis Kortu"?
    <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
@@ -45,6 +46,11 @@ export default function Services(){
    <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
     <img src={manejImage} alt="Gölköy Yaşam Resort manej" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Manej</h3></div>
+   </div>
+   :x==="Resepsiyon"?
+   <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
+    <img src={receptionImage} alt="Gölköy Yaşam Resort resepsiyon girişi" className="w-full h-48 object-cover"/>
+    <div className="p-6"><h3 className="text-xl font-semibold">Resepsiyon</h3><p className="mt-2 text-sm text-gray-500">0366 2528589</p></div>
    </div>
    :<div key={x} className="p-8 rounded-2xl border bg-slate-50"><h3 className="text-xl font-semibold">{x}</h3></div>)}</div>
   {restaurantOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setRestaurantOpen(false)}>
