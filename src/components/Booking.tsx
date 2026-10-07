@@ -37,11 +37,9 @@ export default function Booking() {
             </div>
 
             <div className="p-6 bg-white rounded-2xl shadow-lg">
-              <h3 className="font-semibold text-gray-900 mb-4">Çalışma Saatleri</h3>
-              <div className="space-y-2 text-gray-600">
-                <div className="flex justify-between"><span>Hafta İçi</span><span className="font-medium">08:00 - 22:00</span></div>
-                <div className="flex justify-between"><span>Hafta Sonu</span><span className="font-medium">09:00 - 21:00</span></div>
-                <div className="flex justify-between"><span>Resmi Tatiller</span><span className="font-medium">Kapalı</span></div>
+              <h3 className="font-semibold text-gray-900 mb-4">Üzüm Kızı Telefon</h3>
+              <div className="text-gray-600">
+                <p className="font-medium">0530 717 06 37</p>
               </div>
             </div>
           </div>
