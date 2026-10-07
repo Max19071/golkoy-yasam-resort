@@ -24,8 +24,7 @@ export default function Booking() {
             <div className="space-y-4">
               <div className="p-6 bg-white rounded-2xl shadow-lg">
                 <h3 className="font-semibold text-gray-900 mb-2">☎ Telefon</h3>
-                <p className="text-gray-600">+90 (212) 555 0123</p>
-                <p className="text-gray-600">+90 (555) 123 4567</p>
+                <p className="text-gray-600">0366 252 85 89</p>
               </div>
               <div className="p-6 bg-white rounded-2xl shadow-lg">
                 <h3 className="font-semibold text-gray-900 mb-2">✉ E-posta</h3>
