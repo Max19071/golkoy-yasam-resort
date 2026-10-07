@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const items=["Restoran","Açık Havuz","Manej","Transfer","Ücretsiz Wi‑Fi","Resepsiyon"];
+const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Ücretsiz Wi‑Fi","Resepsiyon"];
 const restaurantImages=["./etkili%20restorant%20sahne.jpg","./etkili%20restorant.jpg"];
 const poolImage="./etkili%20havuz.jpg";
 const manejImage="./etkili%20manej%20ikili.jpg";
@@ -25,10 +25,10 @@ export default function Services(){
     <img src={poolImage} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Açık Havuz</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
-   :x==="Transfer"?
+   :x==="Tenis Kortu"?
    <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
     <img src={courtImage} alt="Gölköy Yaşam Resort tenis kortu" className="w-full h-48 object-cover"/>
-    <div className="p-6"><h3 className="text-xl font-semibold">Transfer</h3></div>
+    <div className="p-6"><h3 className="text-xl font-semibold">Tenis Kortu</h3></div>
    </div>
    :x==="Manej"?
    <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
