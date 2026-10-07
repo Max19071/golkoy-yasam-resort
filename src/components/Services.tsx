@@ -1,8 +1,9 @@
 import { useState } from "react";
 
-const items=["Restoran","Açık Havuz","Oda Servisi","Transfer","Ücretsiz Wi‑Fi","Resepsiyon"];
+const items=["Restoran","Açık Havuz","Manej","Transfer","Ücretsiz Wi‑Fi","Resepsiyon"];
 const restaurantImages=["./etkili%20restorant%20sahne.jpg","./etkili%20restorant.jpg"];
 const poolImage="./etkili%20havuz.jpg";
+const manejImage="./etkili%20manej%20ikili.jpg";
 
 export default function Services(){
  const [restaurantOpen,setRestaurantOpen]=useState(false);
@@ -23,6 +24,11 @@ export default function Services(){
     <img src={poolImage} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Açık Havuz</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
+   :x==="Manej"?
+   <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
+    <img src={manejImage} alt="Gölköy Yaşam Resort manej" className="w-full h-48 object-cover"/>
+    <div className="p-6"><h3 className="text-xl font-semibold">Manej</h3></div>
+   </div>
    :<div key={x} className="p-8 rounded-2xl border bg-slate-50"><h3 className="text-xl font-semibold">{x}</h3></div>)}</div>
   {restaurantOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setRestaurantOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
