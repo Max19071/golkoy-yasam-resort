@@ -1,19 +1,22 @@
 import { useState } from "react";
 
 const items=["Restoran","Açık Havuz","Oda Servisi","Transfer","Ücretsiz Wi‑Fi","Resepsiyon"];
-const restaurantImage="./etkili%20restorant%20sahne.jpg";
-const restaurantDetailImage="./etkili%20restorant.jpg";
+const restaurantImages=["./etkili%20restorant%20sahne.jpg","./etkili%20restorant.jpg"];
 const poolImage="./etkili%20havuz.jpg";
 
 export default function Services(){
  const [restaurantOpen,setRestaurantOpen]=useState(false);
+ const [restaurantIndex,setRestaurantIndex]=useState(0);
  const [poolOpen,setPoolOpen]=useState(false);
+ const openRestaurant=()=>{setRestaurantIndex(0);setRestaurantOpen(true)};
+ const nextRestaurant=()=>setRestaurantIndex(i=>(i+1)%restaurantImages.length);
+ const prevRestaurant=()=>setRestaurantIndex(i=>(i-1+restaurantImages.length)%restaurantImages.length);
  return <section id="services" className="py-20 bg-white"><div className="max-w-6xl mx-auto px-4">
   <div className="text-center mb-12"><span className="text-amber-600 font-semibold">HİZMETLER</span><h2 className="text-4xl font-bold mt-3">Misafirlerimiz İçin</h2></div>
   <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">{items.map(x=>x==="Restoran"?
-   <button key={x} type="button" onClick={()=>setRestaurantOpen(true)} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={restaurantImage} alt="Gölköy Yaşam Resort restoran ve sahne" className="w-full h-48 object-cover"/>
-    <div className="p-6"><h3 className="text-xl font-semibold">Restoran</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
+   <button key={x} type="button" onClick={openRestaurant} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
+    <img src={restaurantImages[0]} alt="Gölköy Yaşam Resort restoran ve sahne" className="w-full h-48 object-cover"/>
+    <div className="p-6"><h3 className="text-xl font-semibold">Restoran</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Açık Havuz"?
    <button key={x} type="button" onClick={()=>setPoolOpen(true)} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
@@ -21,10 +24,13 @@ export default function Services(){
     <div className="p-6"><h3 className="text-xl font-semibold">Açık Havuz</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
    :<div key={x} className="p-8 rounded-2xl border bg-slate-50"><h3 className="text-xl font-semibold">{x}</h3></div>)}</div>
-  {restaurantOpen&&<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4" onClick={()=>setRestaurantOpen(false)}>
+  {restaurantOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setRestaurantOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setRestaurantOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
-    <img src={restaurantDetailImage} alt="Gölköy Yaşam Resort restoran" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <img src={restaurantImages[restaurantIndex]} alt="Gölköy Yaşam Resort restoran" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <button type="button" onClick={prevRestaurant} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
+    <button type="button" onClick={nextRestaurant} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{restaurantIndex+1} / {restaurantImages.length}</div>
    </div>
   </div>}
   {poolOpen&&<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4" onClick={()=>setPoolOpen(false)}>
