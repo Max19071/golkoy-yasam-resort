@@ -3,9 +3,11 @@ import { useState } from "react";
 const items=["Restoran","Açık Havuz","Oda Servisi","Transfer","Ücretsiz Wi‑Fi","Resepsiyon"];
 const restaurantImage="./etkili%20restorant%20sahne.jpg";
 const restaurantDetailImage="./etkili%20restorant.jpg";
+const poolImage="./etkili%20havuz.jpg";
 
 export default function Services(){
  const [restaurantOpen,setRestaurantOpen]=useState(false);
+ const [poolOpen,setPoolOpen]=useState(false);
  return <section id="services" className="py-20 bg-white"><div className="max-w-6xl mx-auto px-4">
   <div className="text-center mb-12"><span className="text-amber-600 font-semibold">HİZMETLER</span><h2 className="text-4xl font-bold mt-3">Misafirlerimiz İçin</h2></div>
   <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">{items.map(x=>x==="Restoran"?
@@ -13,11 +15,22 @@ export default function Services(){
     <img src={restaurantImage} alt="Gölköy Yaşam Resort restoran ve sahne" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Restoran</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
+   :x==="Açık Havuz"?
+   <button key={x} type="button" onClick={()=>setPoolOpen(true)} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
+    <img src={poolImage} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
+    <div className="p-6"><h3 className="text-xl font-semibold">Açık Havuz</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
+   </button>
    :<div key={x} className="p-8 rounded-2xl border bg-slate-50"><h3 className="text-xl font-semibold">{x}</h3></div>)}</div>
   {restaurantOpen&&<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4" onClick={()=>setRestaurantOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setRestaurantOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
     <img src={restaurantDetailImage} alt="Gölköy Yaşam Resort restoran" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+   </div>
+  </div>}
+  {poolOpen&&<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4" onClick={()=>setPoolOpen(false)}>
+   <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
+    <button type="button" onClick={()=>setPoolOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
+    <img src={poolImage} alt="Gölköy Yaşam Resort açık havuz" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
    </div>
   </div>}
  </div></section>
