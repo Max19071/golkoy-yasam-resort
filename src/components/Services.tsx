@@ -1,12 +1,13 @@
 import { useState } from "react";
 
-const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Doğallığı Yaşayın","Oyun Salonu","Resepsiyon"];
+const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Doğallığı Yaşayın","Oyun Salonu","Çocuk Oyun Alanı","Resepsiyon"];
 const restaurantImages=["./etkili%20restorant%20sahne.jpg","./etkili%20restorant.jpg"];
 const poolImage="./etkili%20havuz.jpg";
 const manejImage="./etkili%20manej%20ikili.jpg";
 const courtImages=["./etkili%20kort.jpg","./etkili%20tenis1.jpg"];
 const natureImages=["./etkili%20do%C4%9Fal%20ya%C5%9Fam.jpg","./etkili%20do%C4%9Fal%20ya%C5%9Fam1.jpg"];
 const gameImages=["./etkili%20%C5%9F%C3%B6mine.jpg","./etkili%20oyun%20salonu2.jpg","./etkili%20oyun%20salonu3.jpg"];
+const childrenImage="./etkili%20%C3%A7ocuk%20alan%C4%B11.jpg";
 const receptionImage="./etkili%20giri%C5%9F.jpg";
 
 export default function Services(){
@@ -63,10 +64,15 @@ export default function Services(){
     <img src={gameImages[0]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Oyun Salonu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
+   :x==="Çocuk Oyun Alanı"?
+   <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
+    <img src={childrenImage} alt="Gölköy Yaşam Resort çocuk oyun alanı" className="w-full h-48 object-cover"/>
+    <div className="p-6"><h3 className="text-xl font-semibold">Çocuk Oyun Alanı</h3></div>
+   </div>
    :x==="Resepsiyon"?
-   <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm sm:col-span-2 md:col-span-1 md:col-start-2">
+   <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm md:col-start-2">
     <img src={receptionImage} alt="Gölköy Yaşam Resort resepsiyon girişi" className="w-full h-48 object-cover"/>
-    <div className="p-6"><h3 className="text-xl font-semibold">Resepsiyon</h3><p className="mt-2 text-sm text-gray-500">0366 2528589</p></div>
+    <div className="p-6"><h3 className="text-xl font-semibold">Resepsiyon</h3><p className="mt-2 text-sm text-gray-500">0366 252 85 89</p></div>
    </div>
    :<div key={x} className="p-8 rounded-2xl border bg-slate-50"><h3 className="text-xl font-semibold">{x}</h3></div>)}</div>
   {restaurantOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setRestaurantOpen(false)}>
