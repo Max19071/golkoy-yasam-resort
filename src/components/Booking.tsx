@@ -1,9 +1,50 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Booking() {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const turnstileElement = useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = useRef<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    type Turnstile = {
+      render: (element: HTMLElement, options: Record<string, unknown>) => string;
+      remove: (widgetId: string) => void;
+      reset: (widgetId: string) => void;
+    };
+    const getTurnstile = () => (window as Window & { turnstile?: Turnstile }).turnstile;
+    const renderWidget = () => {
+      const turnstile = getTurnstile();
+      if (!active || !turnstile || !turnstileElement.current || turnstileWidgetId.current) return;
+      turnstileWidgetId.current = turnstile.render(turnstileElement.current, {
+        sitekey: '0x4AAAAAAFRWmRVJ7_RBgSDy',
+        callback: (token: string) => setTurnstileToken(token),
+        'expired-callback': () => setTurnstileToken(''),
+        'error-callback': () => { setTurnstileToken(''); return true; },
+      });
+    };
+    const scriptId = 'cloudflare-turnstile-script';
+    let script = document.getElementById(scriptId) as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+    script.addEventListener('load', renderWidget);
+    renderWidget();
+    return () => {
+      active = false;
+      script?.removeEventListener('load', renderWidget);
+      if (turnstileWidgetId.current && getTurnstile()) getTurnstile()?.remove(turnstileWidgetId.current);
+      turnstileWidgetId.current = null;
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,13 +63,12 @@ export default function Booking() {
       return;
     }
 
-    const payload = Object.fromEntries(
+    if (!turnstileToken) {\n      setError('Lütfen güvenlik doğrulamasının tamamlanmasını bekleyin.');\n      return;\n    }\n\n    const payload = Object.fromEntries(
       ['name', 'email', 'phone', 'roomType', 'checkIn', 'checkOut', 'guests', 'message']
         .map((key) => [key, String(data.get(key) || '').trim()])
     );
 
-    setError('');
-    setSending(true);
+    payload.turnstileToken = turnstileToken;\n    setError('');\n    setSending(true);
 
     try {
       const response = await fetch(
@@ -45,12 +85,10 @@ export default function Booking() {
         throw new Error('Rezervasyon talebiniz gönderilemedi. Lütfen tekrar deneyin veya bizi telefonla arayın.');
       }
 
-      setSubmitted(true);
-      form.reset();
+      setSubmitted(true);\n      form.reset();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu. Lütfen tekrar deneyin.');
-    } finally {
-      setSending(false);
+    } finally {\n      setTurnstileToken('');\n      const turnstile = (window as Window & { turnstile?: { reset: (widgetId: string) => void } }).turnstile;\n      if (turnstile && turnstileWidgetId.current) turnstile.reset(turnstileWidgetId.current);\n      setSending(false);
     }
   };
 
@@ -114,7 +152,7 @@ export default function Booking() {
                 </div>
                 <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Misafir Sayısı</span><select name="guests" className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option>1 Kişi</option><option>2 Kişi</option><option>3 Kişi</option><option>4 Kişi</option><option>5+ Kişi</option></select></label>
                 <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Mesajınız</span><textarea name="message" rows={4} className="w-full px-4 py-3 border border-slate-200 rounded-xl resize-none" placeholder="Özel isteklerinizi yazabilirsiniz..." /></label>
-                {error && <p role="alert" className="text-red-700 text-sm bg-red-50 rounded-lg p-3">{error}</p>}\n                <button type="submit" disabled={sending} className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed">{sending ? "Gönderiliyor..." : "Rezervasyon Gönder →"}</button>
+                <div ref={turnstileElement} className="min-h-[65px]" aria-label="Güvenlik doğrulaması" />\n                {error && <p role="alert" className="text-red-700 text-sm bg-red-50 rounded-lg p-3">{error}</p>}\n                <button type="submit" disabled={sending || !turnstileToken} className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed">{sending ? "Gönderiliyor..." : "Rezervasyon Gönder →"}</button>
               </form>
             )}
           </div>
