@@ -14,6 +14,7 @@ export default function Services(){
  const [restaurantOpen,setRestaurantOpen]=useState(false);
  const [restaurantIndex,setRestaurantIndex]=useState(0);
  const [poolOpen,setPoolOpen]=useState(false);
+ const [childrenOpen,setChildrenOpen]=useState(false);
  const [courtOpen,setCourtOpen]=useState(false);
  const [courtIndex,setCourtIndex]=useState(0);
  const openCourt=()=>{setCourtIndex(0);setCourtOpen(true)};
@@ -65,10 +66,10 @@ export default function Services(){
     <div className="p-6"><h3 className="text-xl font-semibold">Oyun Salonu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Çocuk Oyun Alanı"?
-   <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
+   <button key={x} type="button" onClick={()=>setChildrenOpen(true)} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
     <img src={childrenImage} alt="Gölköy Yaşam Resort çocuk oyun alanı" className="w-full h-48 object-cover"/>
-    <div className="p-6"><h3 className="text-xl font-semibold">Çocuk Oyun Alanı</h3></div>
-   </div>
+    <div className="p-6"><h3 className="text-xl font-semibold">Çocuk Oyun Alanı</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
+   </button>
    :x==="Resepsiyon"?
    <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm md:col-start-2">
     <img src={receptionImage} alt="Gölköy Yaşam Resort resepsiyon girişi" className="w-full h-48 object-cover"/>
@@ -109,6 +110,12 @@ export default function Services(){
     <button type="button" onClick={prevCourt} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
     <button type="button" onClick={nextCourt} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
     <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{courtIndex+1} / {courtImages.length}</div>
+   </div>
+  </div>}
+  {childrenOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setChildrenOpen(false)}>
+   <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
+    <button type="button" onClick={()=>setChildrenOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
+    <img src={childrenImage} alt="Gölköy Yaşam Resort çocuk oyun alanı" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
    </div>
   </div>}
   {poolOpen&&<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4" onClick={()=>setPoolOpen(false)}>
