@@ -9,10 +9,15 @@ import GuestExperiences from './components/GuestExperiences';
 import Footer from './components/Footer';
 import AdminPanel from './components/AdminPanel';
 export default function App() {
-    const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
+    const params = new URLSearchParams(window.location.search);
+    const isAdmin = params.get('admin') === '1';
+    const isReviewsPage = params.get('yorumlar') === '1';
 
   if (isAdmin) {
     return <AdminPanel />;
+  }
+  if (isReviewsPage) {
+    return <div className="min-h-screen"><GuestExperiences allReviews /><Footer /></div>;
   }
   return (
     <div className="min-h-screen">
