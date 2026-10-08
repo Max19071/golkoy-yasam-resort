@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Doğallığı Yaşayın","Oyun Salonu","Çocuk Oyun Alanı","Resepsiyon"];
 const restaurantImages=["./etkili%20restorant%20sahne.jpg","./etkili%20restorant.jpg"];
-const poolImage="./etkili%20havuz.jpg";
+const poolImages=["./etkili%20havuz.jpg","./etkili%20havuz1.jpg"];
 const manejImage="./etkili%20manej%20ikili.jpg";
 const courtImages=["./etkili%20kort.jpg","./etkili%20tenis1.jpg"];
 const natureImages=["./etkili%20do%C4%9Fal%20ya%C5%9Fam.jpg","./etkili%20do%C4%9Fal%20ya%C5%9Fam1.jpg"];
@@ -14,6 +14,10 @@ export default function Services(){
  const [restaurantOpen,setRestaurantOpen]=useState(false);
  const [restaurantIndex,setRestaurantIndex]=useState(0);
  const [poolOpen,setPoolOpen]=useState(false);
+ const [poolIndex,setPoolIndex]=useState(0);
+ const openPool=()=>{setPoolIndex(0);setPoolOpen(true)};
+ const nextPool=()=>setPoolIndex(i=>(i+1)%poolImages.length);
+ const prevPool=()=>setPoolIndex(i=>(i-1+poolImages.length)%poolImages.length);
  const [childrenOpen,setChildrenOpen]=useState(false);
  const [courtOpen,setCourtOpen]=useState(false);
  const [courtIndex,setCourtIndex]=useState(0);
@@ -41,9 +45,9 @@ export default function Services(){
     <div className="p-6"><h3 className="text-xl font-semibold">Restoran</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Açık Havuz"?
-   <button key={x} type="button" onClick={()=>setPoolOpen(true)} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={poolImage} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
-    <div className="p-6"><h3 className="text-xl font-semibold">Açık Havuz</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
+   <button key={x} type="button" onClick={openPool} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
+    <img src={poolImages[0]} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
+    <div className="p-6"><h3 className="text-xl font-semibold">Açık Havuz</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Doğallığı Yaşayın"?
    <button key={x} type="button" onClick={openNature} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
@@ -121,7 +125,10 @@ export default function Services(){
   {poolOpen&&<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4" onClick={()=>setPoolOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setPoolOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
-    <img src={poolImage} alt="Gölköy Yaşam Resort açık havuz" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <img src={poolImages[poolIndex]} alt="Gölköy Yaşam Resort açık havuz" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <button type="button" onClick={prevPool} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
+    <button type="button" onClick={nextPool} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{poolIndex+1} / {poolImages.length}</div>
    </div>
   </div>}
  </div></section>
