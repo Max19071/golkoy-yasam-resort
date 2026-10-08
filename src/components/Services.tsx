@@ -56,7 +56,7 @@ export default function Services(){
    :x==="Oyun Salonu"?
    <button key={x} type="button" onClick={openGame} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
     <img src={gameImages[0]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full h-48 object-cover"/>
-    <div className="p-6"><h3 className="text-xl font-semibold">Etkili Oyun Salonu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
+    <div className="p-6"><h3 className="text-xl font-semibold">Oyun Salonu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Resepsiyon"?
    <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm sm:col-span-2 md:col-span-1 md:col-start-2">
