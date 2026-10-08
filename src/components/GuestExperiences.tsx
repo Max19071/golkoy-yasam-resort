@@ -13,15 +13,17 @@ function ReviewPhotos({paths,name}:{paths:string[];name:string}){
   if(!r.ok)return ""; const d=await r.json(); return d.signedURL?`${SUPABASE_URL}/storage/v1${d.signedURL}`:"";
  })).then(x=>{if(active)setUrls(x.filter(Boolean))}); return()=>{active=false}},[paths]);
  if(!urls.length)return null;
- return <div className="relative mb-5 -mx-7 -mt-7 overflow-hidden rounded-t-3xl bg-slate-100"><img src={urls[index]} alt={`${name} misafir fotoğrafı`} className="w-full h-64 object-cover"/>{urls.length>1&&<><button type="button" onClick={()=>setIndex(i=>(i-1+urls.length)%urls.length)} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/55 text-white text-3xl flex items-center justify-center">‹</button><button type="button" onClick={()=>setIndex(i=>(i+1)%urls.length)} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/55 text-white text-3xl flex items-center justify-center">›</button><span className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-xs">{index+1} / {urls.length}</span></>}</div>
+ return <div className="relative mb-3 -mx-4 -mt-4 overflow-hidden rounded-t-2xl bg-slate-100"><img src={urls[index]} alt={`${name} misafir fotoğrafı`} className="w-full h-36 sm:h-40 object-cover"/>{urls.length>1&&<><button type="button" onClick={()=>setIndex(i=>(i-1+urls.length)%urls.length)} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/55 text-white text-3xl flex items-center justify-center">‹</button><button type="button" onClick={()=>setIndex(i=>(i+1)%urls.length)} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/55 text-white text-3xl flex items-center justify-center">›</button><span className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-xs">{index+1} / {urls.length}</span></>}</div>
 }
 
-export default function GuestExperiences(){
+export default function GuestExperiences({allReviews=false}:{allReviews?:boolean}){
  const [open,setOpen]=useState(false);
  const [sent,setSent]=useState(false);
  const [sending,setSending]=useState(false);
  const [error,setError]=useState("");
  const [reviews,setReviews]=useState<Review[]>([]);
+ const [visibleCount,setVisibleCount]=useState(9);
+ const displayedReviews=allReviews?reviews.slice(0,visibleCount):reviews.slice(0,3);
 
  useEffect(()=>{fetch(`${SUPABASE_URL}/rest/v1/guest_reviews?select=id,guest_name,visit_type,rating,review_text,photo_urls&approved=eq.true&order=created_at.desc`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}})
   .then(r=>r.ok?r.json():[]).then(setReviews).catch(()=>setReviews([]))},[]);
@@ -51,10 +53,13 @@ export default function GuestExperiences(){
   finally{setSending(false)}
  };
 
- return <section id="guest-experiences" className="py-20 bg-white"><div className="max-w-6xl mx-auto px-4">
-  <div className="text-center mb-12"><span className="text-amber-600 font-semibold">MİSAFİRLERİMİZİN GÖZÜNDEN</span><h2 className="text-4xl font-bold mt-3">Deneyiminizi Paylaşın</h2><p className="mt-4 text-gray-600 max-w-2xl mx-auto">Gölköy Yaşam Resort deneyiminizi yorum ve fotoğraflarınızla paylaşın. Gönderiler, yayınlanmadan önce yönetici onayından geçecektir.</p></div>
-  {reviews.length>0&&<div className="grid md:grid-cols-2 gap-6 mb-10">{reviews.map(r=><article key={r.id} className="rounded-3xl border bg-slate-50 p-7 shadow-sm overflow-hidden"><ReviewPhotos paths={r.photo_urls||[]} name={r.guest_name}/><div className="text-amber-500 text-xl tracking-wider">{"★".repeat(r.rating)}{"☆".repeat(5-r.rating)}</div><p className="mt-4 text-gray-700 leading-7">“{r.review_text}”</p><div className="mt-5"><strong>{r.guest_name}</strong><span className="text-gray-500"> · {r.visit_type}</span></div></article>)}</div>}
-  <div className="text-center"><button type="button" onClick={()=>{setOpen(true);setSent(false);setError("")}} className="px-7 py-3 rounded-full bg-amber-500 text-white font-semibold shadow hover:shadow-lg transition">Deneyimini Paylaş</button></div>
+ return <section id="guest-experiences" className="py-14 bg-white"><div className="max-w-6xl mx-auto px-4">
+  <div className="text-center mb-12"><span className="text-amber-600 font-semibold">MİSAFİRLERİMİZİN GÖZÜNDEN</span><h2 className="text-3xl font-bold mt-3">{allReviews?"Misafir Yorumları":"Deneyiminizi Paylaşın"}</h2><p className="mt-4 text-gray-600 max-w-2xl mx-auto">Gölköy Yaşam Resort deneyiminizi yorum ve fotoğraflarınızla paylaşın. Gönderiler, yayınlanmadan önce yönetici onayından geçecektir.</p></div>
+  {reviews.length>0&&<div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">{displayedReviews.map(r=><article key={r.id} className="rounded-2xl border bg-slate-50 p-4 shadow-sm overflow-hidden"><ReviewPhotos paths={r.photo_urls||[]} name={r.guest_name}/><div className="text-amber-500 text-base tracking-wider">{"★".repeat(r.rating)}{"☆".repeat(5-r.rating)}</div><p className={`mt-2 text-sm text-gray-700 leading-6 ${allReviews?"whitespace-pre-wrap break-words":"line-clamp-3"}`}>“{r.review_text}”</p><div className="mt-3 text-sm"><strong>{r.guest_name}</strong><span className="text-gray-500"> · {r.visit_type}</span></div></article>)}</div>}
+  <div className="text-center flex flex-wrap items-center justify-center gap-3">
+   {allReviews?<a href="./#guest-experiences" className="px-6 py-3 rounded-full border border-amber-500 text-amber-700 font-semibold hover:bg-amber-50">Ana Sayfaya Dön</a>:<a href="?yorumlar=1" className="px-6 py-3 rounded-full border border-amber-500 text-amber-700 font-semibold hover:bg-amber-50">Diğer Yorumlar</a>}
+   {allReviews&&visibleCount<reviews.length&&<button type="button" onClick={()=>setVisibleCount(n=>n+9)} className="px-6 py-3 rounded-full border border-slate-300 font-semibold">Daha Fazla Göster</button>}
+   <button type="button" onClick={()=>{setOpen(true);setSent(false);setError("")}} className="px-7 py-3 rounded-full bg-amber-500 text-white font-semibold shadow hover:shadow-lg transition">Deneyimini Paylaş</button></div>
   {open&&<div className="fixed inset-0 z-[110] bg-black/70 flex items-center justify-center p-4" onClick={()=>setOpen(false)}><div className="relative bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-7 md:p-9" onClick={e=>e.stopPropagation()}>
    <button type="button" onClick={()=>setOpen(false)} aria-label="Kapat" className="absolute top-4 right-5 text-3xl text-gray-500">×</button><h3 className="text-2xl font-bold">Deneyimini Paylaş</h3><p className="mt-2 text-sm text-gray-500">Yorumunuz ve fotoğraflarınız yayınlanmadan önce yönetici onayına gönderilir.</p>
    {sent?<div className="mt-8 rounded-2xl bg-green-50 p-6 text-green-800"><strong>Teşekkür ederiz.</strong><p className="mt-2">Paylaşımınız alındı ve onaya gönderildi.</p></div>:
