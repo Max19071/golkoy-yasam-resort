@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Ücretsiz Wi‑Fi","Resepsiyon"];
+const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Doğallığı Yaşayın","Resepsiyon"];
 const restaurantImages=["./etkili%20restorant%20sahne.jpg","./etkili%20restorant.jpg"];
 const poolImage="./etkili%20havuz.jpg";
 const manejImage="./etkili%20manej%20ikili.jpg";
@@ -32,10 +32,10 @@ export default function Services(){
     <img src={poolImage} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Açık Havuz</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
-   :x==="Ücretsiz Wi‑Fi"?
+   :x==="Doğallığı Yaşayın"?
    <button key={x} type="button" onClick={openNature} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={natureImages[0]} alt="Gölköy Yaşam Resort ücretsiz Wi-Fi ve doğal yaşam alanı" className="w-full h-48 object-cover"/>
-    <div className="p-6"><h3 className="text-xl font-semibold">Ücretsiz Wi-Fi</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
+    <img src={natureImages[0]} alt="Gölköy Yaşam Resort doğal yaşam alanı" className="w-full h-48 object-cover"/>
+    <div className="p-6"><h3 className="text-xl font-semibold">Doğallığı Yaşayın</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Tenis Kortu"?
    <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
