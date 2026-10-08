@@ -4,7 +4,7 @@ const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Doğallığı Yaş
 const restaurantImages=["./etkili%20restorant%20sahne.jpg","./etkili%20restorant.jpg"];
 const poolImage="./etkili%20havuz.jpg";
 const manejImage="./etkili%20manej%20ikili.jpg";
-const courtImage="./etkili%20kort.jpg";
+const courtImages=["./etkili%20kort.jpg","./etkili%20tenis1.jpg"];
 const natureImages=["./etkili%20do%C4%9Fal%20ya%C5%9Fam.jpg","./etkili%20do%C4%9Fal%20ya%C5%9Fam1.jpg"];
 const gameImages=["./etkili%20%C5%9F%C3%B6mine.jpg","./etkili%20oyun%20salonu2.jpg","./etkili%20oyun%20salonu3.jpg"];
 const receptionImage="./etkili%20giri%C5%9F.jpg";
@@ -13,6 +13,11 @@ export default function Services(){
  const [restaurantOpen,setRestaurantOpen]=useState(false);
  const [restaurantIndex,setRestaurantIndex]=useState(0);
  const [poolOpen,setPoolOpen]=useState(false);
+ const [courtOpen,setCourtOpen]=useState(false);
+ const [courtIndex,setCourtIndex]=useState(0);
+ const openCourt=()=>{setCourtIndex(0);setCourtOpen(true)};
+ const nextCourt=()=>setCourtIndex(i=>(i+1)%courtImages.length);
+ const prevCourt=()=>setCourtIndex(i=>(i-1+courtImages.length)%courtImages.length);
  const [gameOpen,setGameOpen]=useState(false);
  const [gameIndex,setGameIndex]=useState(0);
  const openGame=()=>{setGameIndex(0);setGameOpen(true)};
@@ -44,10 +49,10 @@ export default function Services(){
     <div className="p-6"><h3 className="text-xl font-semibold">Doğallığı Yaşayın</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Tenis Kortu"?
-   <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
-    <img src={courtImage} alt="Gölköy Yaşam Resort tenis kortu" className="w-full h-48 object-cover"/>
-    <div className="p-6"><h3 className="text-xl font-semibold">Tenis Kortu</h3></div>
-   </div>
+   <button key={x} type="button" onClick={openCourt} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
+    <img src={courtImages[0]} alt="Gölköy Yaşam Resort tenis kortu" className="w-full h-48 object-cover"/>
+    <div className="p-6"><h3 className="text-xl font-semibold">Tenis Kortu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
+   </button>
    :x==="Manej"?
    <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
     <img src={manejImage} alt="Gölköy Yaşam Resort manej" className="w-full h-48 object-cover"/>
@@ -89,6 +94,15 @@ export default function Services(){
     <button type="button" onClick={prevGame} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
     <button type="button" onClick={nextGame} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
     <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{gameIndex+1} / {gameImages.length}</div>
+   </div>
+  </div>}
+  {courtOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setCourtOpen(false)}>
+   <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
+    <button type="button" onClick={()=>setCourtOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
+    <img src={courtImages[courtIndex]} alt="Gölköy Yaşam Resort tenis kortu" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <button type="button" onClick={prevCourt} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
+    <button type="button" onClick={nextCourt} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{courtIndex+1} / {courtImages.length}</div>
    </div>
   </div>}
   {poolOpen&&<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4" onClick={()=>setPoolOpen(false)}>
