@@ -2,26 +2,56 @@ import { useState } from 'react';
 
 export default function Booking() {
   const [submitted, setSubmitted] = useState(false);
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (sending) return;
+
     const form = e.currentTarget;
     const data = new FormData(form);
 
-    const subject = encodeURIComponent("Gölköy Yaşam Resort - Yeni Rezervasyon Talebi");
-    const body = encodeURIComponent(
-      "Ad Soyad: " + data.get("name") + "\n" +
-      "E-posta: " + data.get("email") + "\n" +
-      "Telefon: " + data.get("phone") + "\n" +
-      "Oda Tipi: " + data.get("roomType") + "\n" +
-      "Giriş Tarihi: " + data.get("checkIn") + "\n" +
-      "Çıkış Tarihi: " + data.get("checkOut") + "\n" +
-      "Misafir Sayısı: " + data.get("guests") + "\n\n" +
-      "Mesaj: " + (data.get("message") || "-")
+    // Gizli alanı botlar doldurursa talebi göndermeyiz.
+    if (data.get('website')) return;
+
+    const checkIn = String(data.get('checkIn') || '');
+    const checkOut = String(data.get('checkOut') || '');
+    if (checkOut <= checkIn) {
+      setError('Çıkış tarihi, giriş tarihinden sonra olmalıdır.');
+      return;
+    }
+
+    const payload = Object.fromEntries(
+      ['name', 'email', 'phone', 'roomType', 'checkIn', 'checkOut', 'guests', 'message']
+        .map((key) => [key, String(data.get(key) || '').trim()])
     );
 
-    window.location.href = `mailto:info@golkoyyasamresort.com?subject=${subject}&body=${body}`;
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    setError('');
+    setSending(true);
+
+    try {
+      const response = await fetch(
+        'https://pekpyiyivttrjjxsrarx.supabase.co/functions/v1/send-booking',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const result = await response.json().catch(() => null);
+      if (!response.ok || !result?.success) {
+        throw new Error('Rezervasyon talebiniz gönderilemedi. Lütfen tekrar deneyin veya bizi telefonla arayın.');
+      }
+
+      setSubmitted(true);
+      form.reset();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Bir hata oluştu. Lütfen tekrar deneyin.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -69,7 +99,7 @@ export default function Booking() {
                 <p className="text-gray-600">En kısa sürede sizinle iletişime geçeceğiz.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">\n                <div className="absolute -left-[9999px]" aria-hidden="true"><label>Website<input type="text" name="website" tabIndex={-1} autoComplete="off" /></label></div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Adınız Soyadınız</span><input required name="name" type="text" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="Adınız" /></label>
                   <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">E-posta Adresiniz</span><input required name="email" type="email" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="ornek@email.com" /></label>
@@ -84,7 +114,7 @@ export default function Booking() {
                 </div>
                 <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Misafir Sayısı</span><select name="guests" className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option>1 Kişi</option><option>2 Kişi</option><option>3 Kişi</option><option>4 Kişi</option><option>5+ Kişi</option></select></label>
                 <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Mesajınız</span><textarea name="message" rows={4} className="w-full px-4 py-3 border border-slate-200 rounded-xl resize-none" placeholder="Özel isteklerinizi yazabilirsiniz..." /></label>
-                <button type="submit" className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all">Rezervasyon Gönder →</button>
+                {error && <p role="alert" className="text-red-700 text-sm bg-red-50 rounded-lg p-3">{error}</p>}\n                <button type="submit" disabled={sending} className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed">{sending ? "Gönderiliyor..." : "Rezervasyon Gönder →"}</button>
               </form>
             )}
           </div>
