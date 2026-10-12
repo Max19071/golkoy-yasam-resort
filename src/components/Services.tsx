@@ -18,7 +18,7 @@ export default function Services(){
   const controller = new AbortController();
 
   fetch(
-    "https://pekpyyiivttrjjxsrarx.supabase.co/rest/v1/hotel_gallery?select=image_url,category&is_active=eq.true&order=display_order.asc",
+    "https://pekpyiyivttrjjxsrarx.supabase.co/rest/v1/hotel_gallery?select=image_url,category&is_active=eq.true&order=display_order.asc",
     {
       headers: {
         apikey: "sb_publishable_byqYtROGi5NKkIWiZJ07uw_RMHuMzS",
