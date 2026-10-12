@@ -43,6 +43,12 @@ export default function Services(){
 }, []);
  const [restaurantOpen,setRestaurantOpen]=useState(false);
  const [restaurantIndex,setRestaurantIndex]=useState(0);
+ const restaurantGalleryImages = [
+  ...restaurantImages,
+  ...galeriFotograflari
+    .filter((foto) => foto.category === "Restoran")
+    .map((foto) => foto.image_url),
+];
  const [poolOpen,setPoolOpen]=useState(false);
  const [poolIndex,setPoolIndex]=useState(0);
  const openPool=()=>{setPoolIndex(0);setPoolOpen(true)};
