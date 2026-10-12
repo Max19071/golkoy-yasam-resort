@@ -63,12 +63,19 @@ export default function Booking() {
       return;
     }
 
-    if (!turnstileToken) {\n      setError('Lütfen güvenlik doğrulamasının tamamlanmasını bekleyin.');\n      return;\n    }\n\n    const payload = Object.fromEntries(
+    if (!turnstileToken) {
+      setError('Lütfen güvenlik doğrulamasının tamamlanmasını bekleyin.');
+      return;
+    }
+
+    const payload = Object.fromEntries(
       ['name', 'email', 'phone', 'roomType', 'checkIn', 'checkOut', 'guests', 'message']
         .map((key) => [key, String(data.get(key) || '').trim()])
     );
 
-    payload.turnstileToken = turnstileToken;\n    setError('');\n    setSending(true);
+    payload.turnstileToken = turnstileToken;
+    setError('');
+    setSending(true);
 
     try {
       const response = await fetch(
@@ -85,10 +92,15 @@ export default function Booking() {
         throw new Error('Rezervasyon talebiniz gönderilemedi. Lütfen tekrar deneyin veya bizi telefonla arayın.');
       }
 
-      setSubmitted(true);\n      form.reset();
+      setSubmitted(true);
+      form.reset();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu. Lütfen tekrar deneyin.');
-    } finally {\n      setTurnstileToken('');\n      const turnstile = (window as Window & { turnstile?: { reset: (widgetId: string) => void } }).turnstile;\n      if (turnstile && turnstileWidgetId.current) turnstile.reset(turnstileWidgetId.current);\n      setSending(false);
+    } finally {
+      setTurnstileToken('');
+      const turnstile = (window as Window & { turnstile?: { reset: (widgetId: string) => void } }).turnstile;
+      if (turnstile && turnstileWidgetId.current) turnstile.reset(turnstileWidgetId.current);
+      setSending(false);
     }
   };
 
@@ -137,7 +149,8 @@ export default function Booking() {
                 <p className="text-gray-600">En kısa sürede sizinle iletişime geçeceğiz.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">\n                <div className="absolute -left-[9999px]" aria-hidden="true"><label>Website<input type="text" name="website" tabIndex={-1} autoComplete="off" /></label></div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="absolute -left-[9999px]" aria-hidden="true"><label>Website<input type="text" name="website" tabIndex={-1} autoComplete="off" /></label></div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Adınız Soyadınız</span><input required name="name" type="text" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="Adınız" /></label>
                   <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">E-posta Adresiniz</span><input required name="email" type="email" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="ornek@email.com" /></label>
@@ -152,7 +165,9 @@ export default function Booking() {
                 </div>
                 <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Misafir Sayısı</span><select name="guests" className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option>1 Kişi</option><option>2 Kişi</option><option>3 Kişi</option><option>4 Kişi</option><option>5+ Kişi</option></select></label>
                 <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Mesajınız</span><textarea name="message" rows={4} className="w-full px-4 py-3 border border-slate-200 rounded-xl resize-none" placeholder="Özel isteklerinizi yazabilirsiniz..." /></label>
-                <div ref={turnstileElement} className="min-h-[65px]" aria-label="Güvenlik doğrulaması" />\n                {error && <p role="alert" className="text-red-700 text-sm bg-red-50 rounded-lg p-3">{error}</p>}\n                <button type="submit" disabled={sending || !turnstileToken} className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed">{sending ? "Gönderiliyor..." : "Rezervasyon Gönder →"}</button>
+                <div ref={turnstileElement} className="min-h-[65px]" aria-label="Güvenlik doğrulaması" />
+                {error && <p role="alert" className="text-red-700 text-sm bg-red-50 rounded-lg p-3">{error}</p>}
+                <button type="submit" disabled={sending || !turnstileToken} className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed">{sending ? "Gönderiliyor..." : "Rezervasyon Gönder →"}</button>
               </form>
             )}
           </div>
