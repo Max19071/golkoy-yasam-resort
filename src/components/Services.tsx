@@ -64,11 +64,17 @@ export default function Services(){
  const nextPool=()=>setPoolIndex(i=>(i+1)%havuzGaleriResimleri.length);
  const prevPool=()=>setPoolIndex(i=>(i-1+havuzGaleriResimleri.length)%havuzGaleriResimleri.length);
  const [childrenOpen,setChildrenOpen]=useState(false);
+ const tenisGaleriResimleri = [
+  ...courtImages,
+  ...galeriFotograflari
+    .filter((foto) => foto.category === "Tenis")
+    .map((foto) => foto.image_url),
+];
  const [courtOpen,setCourtOpen]=useState(false);
  const [courtIndex,setCourtIndex]=useState(0);
  const openCourt=()=>{setCourtIndex(0);setCourtOpen(true)};
- const nextCourt=()=>setCourtIndex(i=>(i+1)%courtImages.length);
- const prevCourt=()=>setCourtIndex(i=>(i-1+courtImages.length)%courtImages.length);
+ const nextCourt=()=>setCourtIndex(i=>(i+1)%tenisGaleriResimleri.length);
+ const prevCourt=()=>setCourtIndex(i=>(i-1+tenisGaleriResimleri.length)%tenisGaleriResimleri.length);
  const [gameOpen,setGameOpen]=useState(false);
  const [gameIndex,setGameIndex]=useState(0);
  const openGame=()=>{setGameIndex(0);setGameOpen(true)};
@@ -156,10 +162,10 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
   {courtOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setCourtOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setCourtOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
-    <img src={courtImages[courtIndex]} alt="Gölköy Yaşam Resort tenis kortu" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <img src={tenisGaleriResimleri[courtIndex]} alt="Gölköy Yaşam Resort tenis kortu" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
     <button type="button" onClick={prevCourt} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
     <button type="button" onClick={nextCourt} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
-    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{courtIndex+1} / {courtImages.length}</div>
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{courtIndex+1} / {tenisGaleriResimleri.length}</div>
    </div>
   </div>}
   {childrenOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setChildrenOpen(false)}>
