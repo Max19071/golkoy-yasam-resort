@@ -11,6 +11,9 @@ const childrenImage="./etkili%20%C3%A7ocuk%20alan%C4%B11.jpg";
 const receptionImage="./etkili%20giri%C5%9F.jpg";
 
 export default function Services(){
+ const [galeriFotograflari, setGaleriFotograflari] = useState<
+  { image_url: string; category: string }[]
+>([]);
  const [restaurantOpen,setRestaurantOpen]=useState(false);
  const [restaurantIndex,setRestaurantIndex]=useState(0);
  const [poolOpen,setPoolOpen]=useState(false);
