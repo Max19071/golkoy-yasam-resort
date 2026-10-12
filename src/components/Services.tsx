@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Doğallığı Yaşayın","Oyun Salonu","Çocuk Oyun Alanı","Resepsiyon"];
 const restaurantImages=["./etkili%20restorant%20sahne.jpg","./etkili%20restorant.jpg"];
