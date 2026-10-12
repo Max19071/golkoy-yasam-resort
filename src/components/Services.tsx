@@ -14,6 +14,33 @@ export default function Services(){
  const [galeriFotograflari, setGaleriFotograflari] = useState<
   { image_url: string; category: string }[]
 >([]);
+ useEffect(() => {
+  const controller = new AbortController();
+
+  fetch(
+    "https://pekpyyiivttrjjxsrarx.supabase.co/rest/v1/hotel_gallery?select=image_url,category&is_active=eq.true&order=display_order.asc",
+    {
+      headers: {
+        apikey: "sb_publishable_byqYtROGi5NKkIWiZJ07uw_RMHuMzS",
+      },
+      signal: controller.signal,
+    }
+  )
+    .then((response) => {
+      if (!response.ok) throw new Error("Galeri yüklenemedi");
+      return response.json();
+    })
+    .then((data) => {
+      setGaleriFotograflari(data.filter((foto: { image_url: string }) => foto.image_url));
+    })
+    .catch((error) => {
+      if (error.name !== "AbortError") {
+        console.error("Hizmet galerisi yüklenemedi:", error);
+      }
+    });
+
+  return () => controller.abort();
+}, []);
  const [restaurantOpen,setRestaurantOpen]=useState(false);
  const [restaurantIndex,setRestaurantIndex]=useState(0);
  const [poolOpen,setPoolOpen]=useState(false);
