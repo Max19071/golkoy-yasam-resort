@@ -7,6 +7,12 @@ type Review={id:number;guest_name:string;visit_type:string;rating:number;review_
 async function api(path:string,token:string,options:RequestInit={}){
  return fetch(`${SUPABASE_URL}${path}`,{...options,headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${token}`,"Content-Type":"application/json",...(options.headers||{})}});
 }
+async function verifyAdmin(token:string):Promise<boolean>{
+ try{
+  const response=await api("/rest/v1/rpc/is_admin",token,{method:"POST",body:"{}"});
+  return response.ok && (await response.json())===true;
+ }catch{return false;}
+}
 function Photos({paths,token}:{paths:string[];token:string}){
  const [urls,setUrls]=useState<string[]>([]);
  useEffect(()=>{let ok=true;Promise.all((paths||[]).map(async p=>{const r=await api(`/storage/v1/object/sign/guest-photos/${encodeURIComponent(p)}`,token,{method:"POST",body:JSON.stringify({expiresIn:3600})});if(!r.ok)return "";const d=await r.json();return d.signedURL?`${SUPABASE_URL}/storage/v1${d.signedURL}`:""})).then(x=>ok&&setUrls(x.filter(Boolean)));return()=>{ok=false}},[paths,token]);
@@ -15,9 +21,9 @@ function Photos({paths,token}:{paths:string[];token:string}){
 export default function AdminPanel(){
  const [token,setToken]=useState(()=>sessionStorage.getItem("golkoy_admin_token")||"");
  const [email,setEmail]=useState("");const [password,setPassword]=useState("");const [error,setError]=useState("");const [reviews,setReviews]=useState<Review[]>([]);const [loading,setLoading]=useState(false);
- const load=async(t=token)=>{if(!t)return;setLoading(true);const r=await api("/rest/v1/guest_reviews?select=*&order=created_at.desc",t);if(r.status===401){sessionStorage.removeItem("golkoy_admin_token");setToken("");setError("Oturum süresi doldu.");setLoading(false);return}setReviews(r.ok?await r.json():[]);setLoading(false)};
+ const load=async(t=token)=>{if(!t)return;setLoading(true);if(!(await verifyAdmin(t))){sessionStorage.removeItem("golkoy_admin_token");setToken("");setReviews([]);setError("Yönetici yetkisi doğrulanamadı. Lütfen tekrar giriş yapın.");setLoading(false);return}const r=await api("/rest/v1/guest_reviews?select=*&order=created_at.desc",t);if(!r.ok){setError("Yorumlar yüklenemedi.");setReviews([])}else{setError("");setReviews(await r.json())}setLoading(false)};
  useEffect(()=>{if(token)load(token)},[token]);
- const login=async(e:React.FormEvent)=>{e.preventDefault();setError("");const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{apikey:SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify({email,password})});const d=await r.json();if(!r.ok){setError("E-posta veya şifre hatalı.");return}sessionStorage.setItem("golkoy_admin_token",d.access_token);setToken(d.access_token);setPassword("")};
+ const login=async(e:React.FormEvent)=>{e.preventDefault();setError("");const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{apikey:SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify({email,password})});const d=await r.json();if(!r.ok){setError("E-posta veya şifre hatalı.");return}if(!(await verifyAdmin(d.access_token))){setError("Bu hesap yönetim paneline erişim yetkisine sahip değil.");return}sessionStorage.setItem("golkoy_admin_token",d.access_token);setToken(d.access_token);setPassword("")};
  const update=async(id:number,approved:boolean)=>{const r=await api(`/rest/v1/guest_reviews?id=eq.${id}`,token,{method:"PATCH",headers:{Prefer:"return=minimal"},body:JSON.stringify({approved})});if(r.ok)load()};
  const remove=async(r:Review)=>{if(!confirm("Bu yorumu kalıcı olarak silmek istiyor musunuz?"))return;for(const p of r.photo_urls||[])await api(`/storage/v1/object/guest-photos/${encodeURIComponent(p)}`,token,{method:"DELETE"});const x=await api(`/rest/v1/guest_reviews?id=eq.${r.id}`,token,{method:"DELETE"});if(x.ok)load()};
  const logout=()=>{sessionStorage.removeItem("golkoy_admin_token");setToken("");setReviews([])};
