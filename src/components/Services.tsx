@@ -67,7 +67,7 @@ export default function Services(){
  const tenisGaleriResimleri = [
   ...courtImages,
   ...galeriFotograflari
-    .filter((foto) => foto.category === "Tenis")
+    .filter((foto) => foto.category === "Tenis Kortu")
     .map((foto) => foto.image_url),
 ];
  const [courtOpen,setCourtOpen]=useState(false);
