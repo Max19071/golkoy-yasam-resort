@@ -44,16 +44,25 @@ export default function Services(){
  const [restaurantOpen,setRestaurantOpen]=useState(false);
  const [restaurantIndex,setRestaurantIndex]=useState(0);
  const restaurantGalleryImages = [
+ 
+
+
   ...restaurantImages,
   ...galeriFotograflari
     .filter((foto) => foto.category === "Restoran")
     .map((foto) => foto.image_url),
 ];
+ const havuzGaleriResimleri = [
+  ...poolImages,
+  ...galeriFotograflari
+    .filter((foto) => foto.category === "Havuz")
+    .map((foto) => foto.image_url),
+];
  const [poolOpen,setPoolOpen]=useState(false);
  const [poolIndex,setPoolIndex]=useState(0);
  const openPool=()=>{setPoolIndex(0);setPoolOpen(true)};
- const nextPool=()=>setPoolIndex(i=>(i+1)%poolImages.length);
- const prevPool=()=>setPoolIndex(i=>(i-1+poolImages.length)%poolImages.length);
+ const nextPool=()=>setPoolIndex(i=>(i+1)%havuzGaleriResimleri.length);
+ const prevPool=()=>setPoolIndex(i=>(i-1+havuzGaleriResimleri.length)%havuzGaleriResimleri.length);
  const [childrenOpen,setChildrenOpen]=useState(false);
  const [courtOpen,setCourtOpen]=useState(false);
  const [courtIndex,setCourtIndex]=useState(0);
@@ -162,10 +171,10 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
   {poolOpen&&<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4" onClick={()=>setPoolOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setPoolOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
-    <img src={poolImages[poolIndex]} alt="Gölköy Yaşam Resort açık havuz" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <img src={havuzGaleriResimleri[poolIndex]} alt="Gölköy Yaşam Resort açık havuz" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
     <button type="button" onClick={prevPool} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
     <button type="button" onClick={nextPool} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
-    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{poolIndex+1} / {poolImages.length}</div>
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{poolIndex+1} / {havuzGaleriResimleri.length}</div>
    </div>
   </div>}
  </div></section>
