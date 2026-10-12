@@ -71,8 +71,9 @@ export default function Services(){
  const openNature=()=>{setNatureIndex(0);setNatureOpen(true)};
  const nextNature=()=>setNatureIndex(i=>(i+1)%natureImages.length);
  const prevNature=()=>setNatureIndex(i=>(i-1+natureImages.length)%natureImages.length);
- const nextRestaurant=()=>setRestaurantIndex(i=>(i+1)%restaurantImages.length);
- const prevRestaurant=()=>setRestaurantIndex(i=>(i-1+restaurantImages.length)%restaurantImages.length);
+ const nextRestaurant = () => setRestaurantIndex(i => (i + 1) % restaurantGalleryImages.length);
+const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryImages.length) % restaurantGalleryImages.length);
+ 
  return <section id="services" className="py-20 bg-white"><div className="max-w-6xl mx-auto px-4">
   <div className="text-center mb-12"><span className="text-amber-600 font-semibold">HİZMETLER</span><h2 className="text-4xl font-bold mt-3">Misafirlerimiz İçin</h2></div>
   <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">{items.map(x=>x==="Restoran"?
@@ -119,10 +120,10 @@ export default function Services(){
   {restaurantOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setRestaurantOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setRestaurantOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
-    <img src={restaurantImages[restaurantIndex]} alt="Gölköy Yaşam Resort restoran" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <img src={restaurantGalleryImages[restaurantIndex]} alt="Gölköy Yaşam Resort restoran" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
     <button type="button" onClick={prevRestaurant} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
     <button type="button" onClick={nextRestaurant} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
-    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{restaurantIndex+1} / {restaurantImages.length}</div>
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{restaurantIndex+1} / {restaurantGalleryImages.length}</div>
    </div>
   </div>}
   {natureOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setNatureOpen(false)}>
