@@ -16,11 +16,11 @@ export default function Gallery(){
  useEffect(()=>{
   const controller=new AbortController();
   fetch(BASE+"/rest/v1/hotel_gallery?select=id,image_url,alt_text,title&is_active=eq.true&order=display_order.asc,id.asc",{
-   headers:{apikey:KEY,Authorization:"Bearer "+KEY},
+   headers:{apikey:KEY},
    signal:controller.signal
   }).then(r=>{if(!r.ok)throw Error("Galeri yüklenemedi");return r.json();})
     .then((photos:GalleryImage[])=>setAddedImages(photos.filter(p=>p.image_url)))
-    .catch(()=>{});
+    .catch(error=>{console.error("Galeri fotoğrafları alınamadı:",error);});
   return ()=>controller.abort();
  },[]);
  return <section id="gallery" className="py-20 bg-slate-50"><div className="max-w-7xl mx-auto px-4">
