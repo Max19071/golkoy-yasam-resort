@@ -21,6 +21,7 @@ export default function RoomsAdmin({token}:{token:string}){
  const [saving,setSaving]=useState(false);
  const [uploading,setUploading]=useState(false);
  const [selectedImage,setSelectedImage]=useState<File|null>(null);
+ const [selectedGalleryImage, setSelectedGalleryImage] = useState<File | null>(null);
  const [notice,setNotice]=useState("");
  const request=(path:string,options:RequestInit={})=>fetch(URL_BASE+"/rest/v1/"+path,{...options,headers:{apikey:KEY,Authorization:"Bearer "+token,"Content-Type":"application/json",...(options.headers||{})}});
  const load=async()=>{setLoading(true);try{const r=await request("hotel_rooms?select=*&order=display_order.asc,id.asc");if(!r.ok)throw Error("Odalar yüklenemedi.");setRooms(await r.json());setNotice("");}catch(e){setNotice(e instanceof Error?e.message:"Bağlantı hatası.");}finally{setLoading(false);}};
@@ -45,6 +46,79 @@ export default function RoomsAdmin({token}:{token:string}){
   cancel();await load();setNotice("Oda bilgileri kaydedildi.");
  }catch(e){setNotice(e instanceof Error?e.message:"Kayıt hatası.");}finally{setSaving(false);}};
  const uploadImage=async()=>{if(!selectedImage)return;setNotice("");if(!["image/jpeg","image/png","image/webp"].includes(selectedImage.type)){setNotice("Yalnızca JPG, PNG veya WebP fotoğraf yükleyebilirsiniz.");return;}if(selectedImage.size>5*1024*1024){setNotice("Fotoğraf en fazla 5 MB olabilir.");return;}setUploading(true);try{const ext=selectedImage.type==="image/png"?"png":selectedImage.type==="image/webp"?"webp":"jpg";const path=`rooms/${crypto.randomUUID()}.${ext}`;const response=await fetch(`${URL_BASE}/storage/v1/object/hotel-images/${path}`,{method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+token,"Content-Type":selectedImage.type,"x-upsert":"false"},body:selectedImage});if(!response.ok){const detail=await response.json().catch(()=>({}));throw new Error("Fotoğraf yüklenemedi: "+(detail.message||response.status));}field("cover_image",`${URL_BASE}/storage/v1/object/public/hotel-images/${path}`);setSelectedImage(null);setNotice("Fotoğraf yüklendi. Odaya bağlamak için Odayı Kaydet veya Değişiklikleri Kaydet düğmesine basın.");}catch(e){setNotice(e instanceof Error?e.message:"Fotoğraf yüklenemedi.");}finally{setUploading(false);}};
+ const uploadGalleryImage = async () => {
+  if (!selectedGalleryImage || editing === null) {
+    setNotice("Önce kayıtlı bir odayı düzenlemek için açın ve fotoğraf seçin.");
+    return;
+  }
+
+  if (!["image/jpeg", "image/png", "image/webp"].includes(selectedGalleryImage.type)) {
+    setNotice("Yalnızca JPG, PNG veya WebP fotoğraf yükleyebilirsiniz.");
+    return;
+  }
+
+  if (selectedGalleryImage.size > 5 * 1024 * 1024) {
+    setNotice("Fotoğraf en fazla 5 MB olabilir.");
+    return;
+  }
+
+  setUploading(true);
+  setNotice("");
+
+  try {
+    const ext = selectedGalleryImage.type === "image/png" ? "png"
+      : selectedGalleryImage.type === "image/webp" ? "webp" : "jpg";
+
+    const path = `rooms/${crypto.randomUUID()}.${ext}`;
+
+    const response = await fetch(
+      `${URL_BASE}/storage/v1/object/hotel-images/${path}`,
+      {
+        method: "POST",
+        headers: {
+          apikey: KEY,
+          Authorization: "Bearer " + token,
+          "Content-Type": selectedGalleryImage.type,
+          "x-upsert": "false"
+        },
+        body: selectedGalleryImage
+      }
+    );
+
+    if (!response.ok) {
+      const detail = await response.json().catch(() => ({}));
+      throw new Error("Fotoğraf yüklenemedi: " + (detail.message || response.status));
+    }
+
+    const imageUrl = `${URL_BASE}/storage/v1/object/public/hotel-images/${path}`;
+    const room = rooms.find(r => r.id === editing);
+
+    if (!room) throw new Error("Oda kaydı bulunamadı.");
+
+    const updatedImages = [...(room.gallery_images || []), imageUrl];
+
+    const saveResponse = await request(
+      "hotel_rooms?id=eq." + editing,
+      {
+        method: "PATCH",
+        headers: { Prefer: "return=minimal" },
+        body: JSON.stringify({ gallery_images: updatedImages })
+      }
+    );
+
+    if (!saveResponse.ok) {
+      throw new Error("Fotoğraf yüklendi ancak oda galerisine kaydedilemedi.");
+    }
+
+    setSelectedGalleryImage(null);
+    await load();
+    setNotice("Fotoğraf oda galerisine başarıyla eklendi.");
+  } catch (e) {
+    setNotice(e instanceof Error ? e.message : "Galeri fotoğrafı yüklenemedi.");
+  } finally {
+    setUploading(false);
+  }
+};
  const remove=async(room:Room)=>{if(!window.confirm(room.name+" odasını kalıcı olarak silmek istiyor musunuz?"))return;const r=await request("hotel_rooms?id=eq."+room.id,{method:"DELETE"});if(r.ok){await load();setNotice("Oda silindi.");}else setNotice("Oda silinemedi.");};
  const inputClass="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white text-slate-900";
  return <div className="space-y-6">
@@ -62,6 +136,26 @@ export default function RoomsAdmin({token}:{token:string}){
    <label className="block text-sm font-medium">Oda açıklaması<textarea rows={3} className={inputClass} value={form.description} onChange={e=>field("description",e.target.value)}/></label>
    <label className="block text-sm font-medium">Özellikler (virgülle ayırın)<input className={inputClass} value={form.features} onChange={e=>field("features",e.target.value)} placeholder="Wi-Fi, Klima, Balkon"/></label>
    <div className="border rounded-xl p-4 space-y-3"><label className="block text-sm font-medium">Bilgisayardan oda fotoğrafı seçin (JPG, PNG, WebP; en fazla 5 MB)<input type="file" accept="image/jpeg,image/png,image/webp" className="block w-full mt-2 text-sm" onChange={e=>setSelectedImage(e.target.files?.[0]||null)}/></label><button type="button" onClick={uploadImage} disabled={!selectedImage||uploading||saving} className="bg-slate-800 text-white rounded-xl px-4 py-2.5 disabled:opacity-50">{uploading?"Fotoğraf yükleniyor...":"Fotoğrafı Yükle"}</button><p className="text-sm text-gray-500">Yükledikten sonra oda bilgilerini ayrıca kaydedin.</p></div>
+   {editing !== null && (
+  <div className="border rounded-xl p-4 space-y-3">
+    <h3 className="font-semibold">Oda ve Banyo Fotoğrafları</h3>
+    <input
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      onChange={(e) =>
+        setSelectedGalleryImage(e.target.files?.[0] || null)
+      }
+    />
+    <button
+      type="button"
+      onClick={uploadGalleryImage}
+      disabled={uploading || !selectedGalleryImage}
+      className="bg-amber-500 text-white px-5 py-3 rounded-xl disabled:opacity-50"
+    >
+      {uploading ? "Fotoğraf Yükleniyor..." : "Galeriye Fotoğraf Ekle"}
+    </button>
+  </div>
+)}
    <label className="block text-sm font-medium">Kapak görseli adresi<input className={inputClass} value={form.cover_image} onChange={e=>field("cover_image",e.target.value)} placeholder="Fotoğraf yüklediğinizde otomatik doldurulur"/></label>
    {form.cover_image&&<img src={form.cover_image} alt="Oda kapak fotoğrafı önizlemesi" className="w-full max-w-xs h-44 object-cover rounded-xl" loading="lazy"/>}
    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
