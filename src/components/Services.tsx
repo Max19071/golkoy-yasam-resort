@@ -9,6 +9,7 @@ const courtImages=["./etkili%20kort.jpg","./etkili%20tenis1.jpg"];
 const natureImages=["./etkili%20do%C4%9Fal%20ya%C5%9Fam.jpg","./etkili%20do%C4%9Fal%20ya%C5%9Fam1.jpg"];
 const gameImages=["./etkili%20%C5%9F%C3%B6mine.jpg","./etkili%20oyun%20salonu2.jpg","./etkili%20oyun%20salonu3.jpg"];
 const childrenImage="./etkili%20%C3%A7ocuk%20alan%C4%B11.jpg";
+const childrenImages = [childrenImage];
 const receptionImage="./etkili%20giri%C5%9F.jpg";
 
 export default function Services(){
@@ -84,6 +85,16 @@ const manejGaleriResimleri = [
     .filter((foto) => foto.category === "Oyun Salonu")
     .map((foto) => foto.image_url),
 ];
+ const cocukGaleriResimleri = [
+  ...childrenImages,
+  ...galeriFotograflari
+    .filter((foto) => foto.category === "Çocuk Oyun Alanı")
+    .map((foto) => foto.image_url),
+];
+
+ const [childrenIndex, setChildrenIndex] = useState(0);
+const nextChildren = () => setChildrenIndex(i => (i + 1) % cocukGaleriResimleri.length);
+const prevChildren = () => setChildrenIndex(i => (i - 1 + cocukGaleriResimleri.length) % cocukGaleriResimleri.length);
 const [manejOpen, setManejOpen] = useState(false);
 const [manejIndex, setManejIndex] = useState(0);
 const openManej = () => {
@@ -206,7 +217,10 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
   {childrenOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setChildrenOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setChildrenOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
-    <img src={childrenImage} alt="Gölköy Yaşam Resort çocuk oyun alanı" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <img src={cocukGaleriResimleri[childrenIndex]} alt="Gölköy Yaşam Resort çocuk oyun alanı" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <button type="button" onClick={prevChildren} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl">‹</button>
+<button type="button" onClick={nextChildren} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl">›</button>
+  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{childrenIndex + 1} / {cocukGaleriResimleri.length}</div>  
    </div>
   </div>}
   {poolOpen&&<div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4" onClick={()=>setPoolOpen(false)}>
