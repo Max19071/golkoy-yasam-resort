@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Doğallığı Yaşayın","Oyun Salonu","Çocuk Oyun Alanı","Resepsiyon"];
 const restaurantImages=["./etkili%20restorant%20sahne.jpg","./etkili%20restorant.jpg"];
 const poolImages=["./etkili%20havuz.jpg","./etkili%20havuz1.jpg"];
-const manejImage="./etkili%20manej%20ikili.jpg";
+const manejImage = "./etkili%20manej%20ikili.jpg";
+const manejImages = [manejImage];
 const courtImages=["./etkili%20kort.jpg","./etkili%20tenis1.jpg"];
 const natureImages=["./etkili%20do%C4%9Fal%20ya%C5%9Fam.jpg","./etkili%20do%C4%9Fal%20ya%C5%9Fam1.jpg"];
 const gameImages=["./etkili%20%C5%9F%C3%B6mine.jpg","./etkili%20oyun%20salonu2.jpg","./etkili%20oyun%20salonu3.jpg"];
@@ -65,11 +66,28 @@ export default function Services(){
  const prevPool=()=>setPoolIndex(i=>(i-1+havuzGaleriResimleri.length)%havuzGaleriResimleri.length);
  const [childrenOpen,setChildrenOpen]=useState(false);
  const tenisGaleriResimleri = [
+
   ...courtImages,
   ...galeriFotograflari
     .filter((foto) => foto.category === "Tenis Kortu")
     .map((foto) => foto.image_url),
 ];
+const manejGaleriResimleri = [
+  ...manejImages,
+  ...galeriFotograflari
+    .filter((foto) => foto.category === "Manej")
+    .map((foto) => foto.image_url),
+];
+const [manejOpen, setManejOpen] = useState(false);
+const [manejIndex, setManejIndex] = useState(0);
+const openManej = () => {
+  setManejIndex(0);
+  setManejOpen(true);
+};
+const nextManej = () =>
+  setManejIndex(i => (i + 1) % manejGaleriResimleri.length);
+const prevManej = () =>
+  setManejIndex(i => (i - 1 + manejGaleriResimleri.length) % manejGaleriResimleri.length);
  const [courtOpen,setCourtOpen]=useState(false);
  const [courtIndex,setCourtIndex]=useState(0);
  const openCourt=()=>{setCourtIndex(0);setCourtOpen(true)};
@@ -112,10 +130,10 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
     <div className="p-6"><h3 className="text-xl font-semibold">Tenis Kortu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Manej"?
-   <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
+   <button key={x} type="button" onClick={openManej} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
     <img src={manejImage} alt="Gölköy Yaşam Resort manej" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Manej</h3></div>
-   </div>
+   </button>
    :x==="Oyun Salonu"?
    <button key={x} type="button" onClick={openGame} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
     <img src={gameImages[0]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full h-48 object-cover"/>
@@ -168,6 +186,17 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
     <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{courtIndex+1} / {tenisGaleriResimleri.length}</div>
    </div>
   </div>}
+  {manejOpen && (
+  <div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={() => setManejOpen(false)}>
+    <div className="relative max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
+      <button type="button" onClick={() => setManejOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
+      <img src={manejGaleriResimleri[manejIndex]} alt="Gölköy Yaşam Resort manej" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+      <button type="button" onClick={prevManej} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl">‹</button>
+      <button type="button" onClick={nextManej} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl">›</button>
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{manejIndex + 1} / {manejGaleriResimleri.length}</div>
+    </div>
+  </div>
+)}
   {childrenOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setChildrenOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setChildrenOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
