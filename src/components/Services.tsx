@@ -78,6 +78,12 @@ const manejGaleriResimleri = [
     .filter((foto) => foto.category === "Manej")
     .map((foto) => foto.image_url),
 ];
+ const oyunGaleriResimleri = [
+  ...gameImages,
+  ...galeriFotograflari
+    .filter((foto) => foto.category === "Oyun Salonu")
+    .map((foto) => foto.image_url),
+];
 const [manejOpen, setManejOpen] = useState(false);
 const [manejIndex, setManejIndex] = useState(0);
 const openManej = () => {
@@ -96,8 +102,8 @@ const prevManej = () =>
  const [gameOpen,setGameOpen]=useState(false);
  const [gameIndex,setGameIndex]=useState(0);
  const openGame=()=>{setGameIndex(0);setGameOpen(true)};
- const nextGame=()=>setGameIndex(i=>(i+1)%gameImages.length);
- const prevGame=()=>setGameIndex(i=>(i-1+gameImages.length)%gameImages.length);
+ const nextGame=()=>setGameIndex(i=>(i+1)%oyunGaleriResimleri.length);
+ const prevGame=()=>setGameIndex(i=>(i-1+oyunGaleriResimleri.length)%oyunGaleriResimleri.length);
  const [natureOpen,setNatureOpen]=useState(false);
  const [natureIndex,setNatureIndex]=useState(0);
  const openRestaurant=()=>{setRestaurantIndex(0);setRestaurantOpen(true)};
@@ -136,7 +142,7 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
    </button>
    :x==="Oyun Salonu"?
    <button key={x} type="button" onClick={openGame} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={gameImages[0]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full h-48 object-cover"/>
+    <img src={oyunGaleriResimleri[0]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Oyun Salonu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Çocuk Oyun Alanı"?
@@ -171,10 +177,10 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
   {gameOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setGameOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setGameOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
-    <img src={gameImages[gameIndex]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <img src={oyunGaleriResimleri[gameIndex]]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
     <button type="button" onClick={prevGame} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
     <button type="button" onClick={nextGame} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
-    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{gameIndex+1} / {gameImages.length}</div>
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{gameIndex+1} / {oyunGaleriResimleri.length}</div>
    </div>
   </div>}
   {courtOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setCourtOpen(false)}>
