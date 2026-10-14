@@ -1,13 +1,53 @@
 import { useEffect, useRef, useState } from 'react';
-
+type BookingRoom = {
+  id: number;
+  name: string;
+  capacity: number;
+};
 export default function Booking() {
   const [submitted, setSubmitted] = useState(false);
+  const [roomOptions, setRoomOptions] = useState<BookingRoom[]>([]);
+const [roomsLoading, setRoomsLoading] = useState(true);
+const [selectedRoomName, setSelectedRoomName] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [turnstileToken, setTurnstileToken] = useState('');
   const turnstileElement = useRef<HTMLDivElement>(null);
   const turnstileWidgetId = useRef<string | null>(null);
+useEffect(() => {
+  const controller = new AbortController();
 
+  const url =
+    "https://pekpyiyivttrjjxsrarx.supabase.co/rest/v1/hotel_rooms?select=id,name,capacity&is_active=eq.true&order=display_order.asc";
+
+  const key = "sb_publishable_byqYtROGi5NKkIWiZJ07uw_RMPhuMzS";
+
+  fetch(url, {
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+    },
+    signal: controller.signal,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Odalar yüklenemedi");
+      }
+      return response.json();
+    })
+    .then((rooms: BookingRoom[]) => {
+      setRoomOptions(rooms);
+      setRoomsLoading(false);
+    })
+    .catch((error) => {
+      if (error.name !== "AbortError") {
+        console.error("Oda listesi alınamadı:", error);
+        setRoomsLoading(false);
+      }
+    });
+
+  return () => controller.abort();
+}, []);
   useEffect(() => {
     let active = true;
     type Turnstile = {
@@ -157,13 +197,45 @@ export default function Booking() {
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Telefon Numaranız</span><input required name="phone" type="tel" className="w-full px-4 py-3 border border-slate-200 rounded-xl" placeholder="+90 5XX XXX XX XX" /></label>
-                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Oda Tipi</span><select name="roomType" required className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option value="">Seçiniz</option><option>Standart Oda</option><option>Superior Oda</option><option>Deluxe Oda</option><option>Suit</option></select></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Oda Tipi</span><select
+  name="roomType"
+  required
+  value={selectedRoomName}
+  onChange={(e) => setSelectedRoomName(e.target.value)} className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option value="">
+  {roomsLoading ? "Odalar yükleniyor..." : "Seçiniz"}
+</option>
+{roomOptions.map((room) => (
+  <option key={room.id} value={room.name}>
+    {room.name}
+  </option>
+))}</select></label>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Giriş Tarihi</span><input required name="checkIn" type="date" className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
                   <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Çıkış Tarihi</span><input required name="checkOut" type="date" className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
                 </div>
-                <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Misafir Sayısı</span><select name="guests" className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option>1 Kişi</option><option>2 Kişi</option><option>3 Kişi</option><option>4 Kişi</option><option>5+ Kişi</option></select></label>
+                <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Misafir Sayısı</span><select name="guests" key={selectedRoomName} className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option value="">Seçiniz</option>
+{roomOptions
+  .filter((room) => room.name === selectedRoomName)
+  .flatMap((room) =>
+    Array.from(
+      { length: room.capacity },
+      (_, i) => i + 1
+    )
+      .filter(
+        (count) =>
+          !(
+            room.name.trim().toLocaleLowerCase("tr-TR") ===
+              "bahçe odaları standart" &&
+            count === 1
+          )
+      )
+      .map((count) => (
+        <option key={count} value={`${count} Kişi`}>
+          {count} Kişi
+        </option>
+      ))
+  )}</select></label>
                 <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Mesajınız</span><textarea name="message" rows={4} className="w-full px-4 py-3 border border-slate-200 rounded-xl resize-none" placeholder="Özel isteklerinizi yazabilirsiniz..." /></label>
                 <div ref={turnstileElement} className="min-h-[65px]" aria-label="Güvenlik doğrulaması" />
                 {error && <p role="alert" className="text-red-700 text-sm bg-red-50 rounded-lg p-3">{error}</p>}
