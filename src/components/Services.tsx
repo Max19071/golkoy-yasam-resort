@@ -116,11 +116,19 @@ const prevManej = () =>
  const nextGame=()=>setGameIndex(i=>(i+1)%oyunGaleriResimleri.length);
  const prevGame=()=>setGameIndex(i=>(i-1+oyunGaleriResimleri.length)%oyunGaleriResimleri.length);
  const [natureOpen,setNatureOpen]=useState(false);
+ 
+const natureGalleryImages = [
+  ...natureImages,
+  ...galeriFotograflari
+    .filter((foto) => foto.category === "Doğallığı Yaşayın")
+    .map((foto) => foto.image_url),
+];
+
  const [natureIndex,setNatureIndex]=useState(0);
  const openRestaurant=()=>{setRestaurantIndex(0);setRestaurantOpen(true)};
  const openNature=()=>{setNatureIndex(0);setNatureOpen(true)};
- const nextNature=()=>setNatureIndex(i=>(i+1)%natureImages.length);
- const prevNature=()=>setNatureIndex(i=>(i-1+natureImages.length)%natureImages.length);
+ const nextNature=()=>setNatureIndex(i=>(i+1)%natureGalleryImages.length);
+ const prevNature=()=>setNatureIndex(i=>(i-1+natureGalleryImages.length)%natureGalleryImages.length);
  const nextRestaurant = () => setRestaurantIndex(i => (i + 1) % restaurantGalleryImages.length);
 const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryImages.length) % restaurantGalleryImages.length);
  
@@ -179,10 +187,10 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
   {natureOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setNatureOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e=>e.stopPropagation()}>
     <button type="button" onClick={()=>setNatureOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
-    <img src={natureImages[natureIndex]} alt="Gölköy Yaşam Resort doğal yaşam" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <img src={natureGalleryImages[natureIndex]} alt="Gölköy Yaşam Resort doğal yaşam" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
     <button type="button" onClick={prevNature} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
     <button type="button" onClick={nextNature} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
-    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{natureIndex+1} / {natureImages.length}</div>
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{{natureIndex+1} / {natureGalleryImages.length}</div>
    </div>
   </div>}
   {gameOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setGameOpen(false)}>
