@@ -156,6 +156,37 @@ export default function RoomsAdmin({token}:{token:string}){
     </button>
   </div>
 )}
+{editing !== null && (
+  <div className="border rounded-xl p-4 space-y-3">
+    <h3 className="font-semibold">Kayıtlı Galeri Fotoğrafları</h3>
+    {(() => {
+      const room = rooms.find(r => r.id === editing);
+      const images = room?.gallery_images || [];
+
+      if (images.length === 0) {
+        return <p className="text-gray-500">Henüz galeri fotoğrafı yok.</p>;
+      }
+
+      return (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {images.map((url, index) => (
+            <div key={index} className="border rounded-xl p-2">
+              <img
+                src={url}
+                alt={`Galeri fotoğrafı ${index + 1}`}
+                className="w-full h-32 object-cover rounded-lg"
+              />
+              <p className="text-center text-sm mt-2">
+                Fotoğraf {index + 1}
+              </p>
+            </div>
+          ))}
+        </div>
+      );
+    })()}
+  </div>
+)}
+
    <label className="block text-sm font-medium">Kapak görseli adresi<input className={inputClass} value={form.cover_image} onChange={e=>field("cover_image",e.target.value)} placeholder="Fotoğraf yüklediğinizde otomatik doldurulur"/></label>
    {form.cover_image&&<img src={form.cover_image} alt="Oda kapak fotoğrafı önizlemesi" className="w-full max-w-xs h-44 object-cover rounded-xl" loading="lazy"/>}
    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
