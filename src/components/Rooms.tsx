@@ -13,6 +13,7 @@ type Room = {
   gallery_images: string[];
   is_active: boolean;
   display_order: number;
+    prices_by_occupancy?: Record<string, number | null> | null;
 };
 
 export default function Rooms() {
@@ -122,7 +123,34 @@ export default function Rooms() {
                   <p className="mt-3 text-gray-600">
                     {room.description}
                   </p>
+<div className="mt-4 rounded-xl bg-amber-50 p-4">
+  <label className="block text-sm font-semibold mb-2">
+    Kişi Sayısı ve Gecelik Fiyat
+  </label>
 
+  <div className="space-y-2">
+    {Array.from(
+      { length: Math.max(1, room.capacity) },
+      (_, i) => i + 1
+    ).map((count) => {
+      const price = room.prices_by_occupancy?.[String(count)];
+
+      return (
+        <div
+          key={count}
+          className="flex justify-between text-sm"
+        >
+          <span>{count} Kişilik</span>
+          <span className="font-semibold">
+            {typeof price === "number"
+              ? `${price.toLocaleString("tr-TR")} TL / gece`
+              : "Fiyat için bilgi alınız"}
+          </span>
+        </div>
+      );
+    })}
+  </div>
+</div>
                   {getPhotos(room).length > 0 && (
                     <button
                       type="button"
