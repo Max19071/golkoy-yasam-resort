@@ -133,6 +133,13 @@ export default function Rooms() {
       { length: Math.max(1, room.capacity) },
       (_, i) => i + 1
     ).map((count) => {
+  if (
+  room.name.trim().toLocaleLowerCase("tr-TR") ===
+    "bahçe odaları standart" &&
+  count === 1
+) {
+  return null;
+}
       const price = room.prices_by_occupancy?.[String(count)];
 
       return (
