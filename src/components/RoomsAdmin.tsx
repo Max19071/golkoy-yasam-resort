@@ -41,7 +41,7 @@ export default function RoomsAdmin({token}:{token:string}){
      const value=(occupancyPrices[String(i)]||"").trim();
      if(value==="")continue;
      const amount=Number(value);
-if(!Number.isFinite(amount)||amount<0)throw Error(`${i} kişilik fiyat geçerli olmalı.`);
+if (!Number.isFinite(amount) || amount < 0) throw Error(i + " kişilik fiyat geçerli olmalı.");
 
      pricesByOccupancy[String(i)]=amount;
    }
