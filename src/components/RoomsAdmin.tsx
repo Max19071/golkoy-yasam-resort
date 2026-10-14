@@ -1,4 +1,3 @@
-```
 import { useEffect, useState } from "react";
 
 const URL_BASE = "https://pekpyiyivttrjjxsrarx.supabase.co";
@@ -6,7 +5,7 @@ const KEY = "sb_publishable_byqYtROGi5NKkIWiZJ07uw_RMPhuMzS";
 
 type Room = {
  id: number; name: string; slug: string; description: string;
- price_per_night: number | null; prices_by_occupancy?: Record<string, number>; currency: string; capacity: number;
+ price_per_night: number | null; prices_by_occupancy?: Record<string, number> | null; currency: string; capacity: number;
  size_sqm: number | null; features: string[]; cover_image: string;
  gallery_images: string[]; is_active: boolean; display_order: number;
  seo_title: string; seo_description: string;
@@ -30,22 +29,22 @@ export default function RoomsAdmin({token}:{token:string}){
  useEffect(()=>{void load();},[token]);
  const field=(key:keyof Form,value:string|boolean)=>setForm(prev=>({...prev,[key]:value}));
  const edit=(room:Room)=>{setEditing(room.id);setForm({name:room.name,slug:room.slug,description:room.description||"",price_per_night:room.price_per_night==null?"":String(room.price_per_night),capacity:String(room.capacity),size_sqm:room.size_sqm==null?"":String(room.size_sqm),features:(room.features||[]).join(", "),cover_image:room.cover_image||"",is_active:room.is_active,display_order:String(room.display_order),seo_title:room.seo_title||"",seo_description:room.seo_description||""});setOccupancyPrices(Object.fromEntries(Object.entries(room.prices_by_occupancy||{}).map(([k,v])=>[k,String(v)])));window.scrollTo({top:0,behavior:"smooth"});};
- const cancel=()=>{setEditing(null);setForm({...blank});setOccupancyPrices({});setSelectedImage(null);setNotice("");};
+ const cancel=()=>{setEditing(null);setForm({...blank});setSelectedImage(null);setOccupancyPrices({});setNotice("");};
  const save=async(e:React.FormEvent)=>{e.preventDefault();setNotice("");setSaving(true);try{
   const slug=slugify(form.slug||form.name);
   if(!slug)throw Error("Geçerli bir oda adı girin.");
   const capacity=Number(form.capacity);
-   if(!Number.isInteger(capacity)||capacity<1)throw Error("Kapasite en az 1 olmalı.");
-   const pricesByOccupancy:Record<string,number>={};
-   for(let i=1;i<=capacity;i++){
-     const value=(occupancyPrices[String(i)]||"").trim();
-     if(value==="")continue;
-     const amount=Number(value);
-if (!Number.isFinite(amount) || amount < 0) throw Error(i + " kişilik fiyat geçerli olmalı.");
-
-     pricesByOccupancy[String(i)]=amount;
-   }
-   const price=Object.keys(pricesByOccupancy).length>0?pricesByOccupancy[Object.keys(pricesByOccupancy).sort((a,b)=>Number(a)-Number(b))[0]]:null;
+  if(!Number.isInteger(capacity)||capacity<1)throw Error("Kapasite en az 1 olmalı.");
+  const pricesByOccupancy:Record<string,number>={};
+  for(let i=1;i<=capacity;i++){
+   const value=(occupancyPrices[String(i)]||"").trim();
+   if(value==="")continue;
+   const amount=Number(value);
+   if(!Number.isFinite(amount)||amount<0)throw Error(i+" kişilik fiyat geçerli olmalı.");
+   pricesByOccupancy[String(i)]=amount;
+  }
+  const filled=Object.keys(pricesByOccupancy).map(Number).sort((a,b)=>a-b);
+  const price=filled.length?pricesByOccupancy[String(filled[0])]:null;
   const size=form.size_sqm.trim()===""?null:Number(form.size_sqm);
   if(size!==null&&(!Number.isInteger(size)||size<1))throw Error("Oda büyüklüğü geçerli olmalı.");
   const order=Number(form.display_order);
@@ -185,20 +184,20 @@ if (!Number.isFinite(amount) || amount < 0) throw Error(i + " kişilik fiyat ge�
    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
     <label className="text-sm font-medium">Oda adı *<input required maxLength={150} className={inputClass} value={form.name} onChange={e=>field("name",e.target.value)}/></label>
     <label className="text-sm font-medium">Kısa bağlantı adı (isteğe bağlı)<input className={inputClass} value={form.slug} onChange={e=>field("slug",e.target.value)} placeholder="ornegin-deluks-oda"/></label>
-     <label className="text-sm font-medium">Misafir kapasitesi *<input required type="number" min="1" step="1" className={inputClass} value={form.capacity} onChange={e=>field("capacity",e.target.value)}/></label>
+    <div className="text-sm font-medium md:col-span-2">
+      <p className="mb-2">Kişi sayısına göre gecelik fiyatlar (TL)</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+       {Array.from({length:Math.min(20,Math.max(0,Number(form.capacity)||0))},(_,index)=>index+1).map(count=>(
+        <label key={count} className="block text-sm">{count} Kişilik
+         <input type="number" min="0" step="0.01" className={inputClass} value={occupancyPrices[String(count)]||""} onChange={e=>setOccupancyPrices(prev=>({...prev,[String(count)]:e.target.value}))} placeholder="Fiyat girin"/>
+        </label>
+       ))}
+      </div>
+      <p className="mt-2 text-xs text-gray-500">Boş bırakılan kişi sayıları için fiyat gösterilmez. Kapasiteyi değiştirdiğinizde alan sayısı güncellenir.</p>
+     </div>
+    <label className="text-sm font-medium">Misafir kapasitesi *<input required type="number" min="1" step="1" className={inputClass} value={form.capacity} onChange={e=>field("capacity",e.target.value)}/></label>
     <label className="text-sm font-medium">Oda büyüklüğü (m²)<input type="number" min="1" step="1" className={inputClass} value={form.size_sqm} onChange={e=>field("size_sqm",e.target.value)}/></label>
     <label className="text-sm font-medium">Görüntüleme sırası<input type="number" step="1" className={inputClass} value={form.display_order} onChange={e=>field("display_order",e.target.value)}/></label>
-   </div>
-   <div className="border rounded-xl p-4 space-y-3">
-    <h3 className="font-semibold">Kişi Sayısına Göre Gecelik Fiyatlar (TL)</h3>
-    <p className="text-sm text-gray-500">Misafir kapasitesine göre fiyat kutuları açılır. Fiyat belirtmek istemediğiniz seçenekleri boş bırakabilirsiniz.</p>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-     {Array.from({length:Math.min(Math.max(Number(form.capacity)||0,0),30)},(_,i)=>i+1).map(count=>(
-      <label key={count} className="text-sm font-medium">{count} Kişilik (TL)
-       <input type="number" min="0" step="0.01" className={inputClass} value={occupancyPrices[String(count)]||""} onChange={e=>setOccupancyPrices(prev=>({...prev,[String(count)]:e.target.value}))} placeholder="Fiyat giriniz"/>
-      </label>
-     ))}
-    </div>
    </div>
    <label className="block text-sm font-medium">Oda açıklaması<textarea rows={3} className={inputClass} value={form.description} onChange={e=>field("description",e.target.value)}/></label>
    <label className="block text-sm font-medium">Özellikler (virgülle ayırın)<input className={inputClass} value={form.features} onChange={e=>field("features",e.target.value)} placeholder="Wi-Fi, Klima, Balkon"/></label>
@@ -273,7 +272,6 @@ if (!Number.isFinite(amount) || amount < 0) throw Error(i + " kişilik fiyat ge�
    <div className="flex flex-wrap gap-2"><button disabled={saving} className="bg-amber-500 text-white font-semibold px-5 py-3 rounded-xl disabled:opacity-50">{saving?"Kaydediliyor...":editing===null?"Odayı Kaydet":"Değişiklikleri Kaydet"}</button>{editing!==null&&<button type="button" onClick={cancel} className="border px-5 py-3 rounded-xl">Vazgeç</button>}</div>
   </form>
   {notice&&<p role="status" className="bg-white border rounded-xl p-3 text-sm">{notice}</p>}
-  <div className="space-y-3"><h2 className="text-xl font-semibold">Kayıtlı Odalar ({rooms.length})</h2>{loading?<p>Yükleniyor...</p>:rooms.length===0?<p className="bg-white p-6 rounded-xl">Henüz oda eklenmedi.</p>:rooms.map(room=><article key={room.id} className="bg-white border rounded-2xl p-4 flex flex-col sm:flex-row gap-4 justify-between"><div className="min-w-0"><h3 className="font-bold">{room.name}</h3><p className="text-sm text-gray-500">{Object.keys(room.prices_by_occupancy||{}).length===0?(room.price_per_night==null?"Fiyat belirtilmedi":Number(room.price_per_night).toLocaleString("tr-TR")+" TL / gece"):Object.entries(room.prices_by_occupancy||{}).sort(([a],[b])=>Number(a)-Number(b)).map(([persons,amount])=>`${persons} kişi: ${Number(amount).toLocaleString("tr-TR")} TL`).join(" · ")} · {room.capacity} kişi · {room.is_active?"Aktif":"Pasif"}</p></div><div className="flex gap-2"><button onClick={()=>edit(room)} className="px-4 py-2 border rounded-xl">Düzenle</button><button onClick={()=>remove(room)} className="px-4 py-2 border border-red-200 text-red-700 rounded-xl">Sil</button></div></article>)}</div>
+  <div className="space-y-3"><h2 className="text-xl font-semibold">Kayıtlı Odalar ({rooms.length})</h2>{loading?<p>Yükleniyor...</p>:rooms.length===0?<p className="bg-white p-6 rounded-xl">Henüz oda eklenmedi.</p>:rooms.map(room=><article key={room.id} className="bg-white border rounded-2xl p-4 flex flex-col sm:flex-row gap-4 justify-between"><div className="min-w-0"><h3 className="font-bold">{room.name}</h3><p className="text-sm text-gray-500">{Object.keys(room.prices_by_occupancy||{}).length ? Object.entries(room.prices_by_occupancy||{}).sort((a,b)=>Number(a[0])-Number(b[0])).map(([count,amount])=>count+" kişi: "+Number(amount).toLocaleString("tr-TR")+" TL").join(" · ") : room.price_per_night==null?"Fiyat belirtilmedi":Number(room.price_per_night).toLocaleString("tr-TR")+" TL / gece"} · {room.capacity} kişi · {room.is_active?"Aktif":"Pasif"}</p></div><div className="flex gap-2"><button onClick={()=>edit(room)} className="px-4 py-2 border rounded-xl">Düzenle</button><button onClick={()=>remove(room)} className="px-4 py-2 border border-red-200 text-red-700 rounded-xl">Sil</button></div></article>)}</div>
  </div>;
 }
-```
