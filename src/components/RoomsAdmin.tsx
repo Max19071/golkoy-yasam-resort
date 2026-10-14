@@ -119,6 +119,53 @@ export default function RoomsAdmin({token}:{token:string}){
     setUploading(false);
   }
 };
+  const removeGalleryImage = async (imageIndex: number) => {
+    if (editing === null) return;
+
+    const room = rooms.find(r => r.id === editing);
+    if (!room) return;
+
+    const images = room.gallery_images || [];
+    if (imageIndex < 0 || imageIndex >= images.length) return;
+
+    if (!window.confirm("Bu fotoğrafı galeriden silmek istiyor musunuz?")) {
+      return;
+    }
+
+    setSaving(true);
+    setNotice("");
+
+    try {
+      const updatedImages = images.filter(
+        (_, index) => index !== imageIndex
+      );
+
+      const response = await request(
+        "hotel_rooms?id=eq." + editing,
+        {
+          method: "PATCH",
+          headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({
+            gallery_images: updatedImages
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Fotoğraf galeriden silinemedi.");
+      }
+
+      await load();
+      setNotice("Seçilen fotoğraf galeriden kaldırıldı.");
+    } catch (error) {
+      setNotice(
+        error instanceof Error ? error.message : "Silme hatası."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
  const remove=async(room:Room)=>{if(!window.confirm(room.name+" odasını kalıcı olarak silmek istiyor musunuz?"))return;const r=await request("hotel_rooms?id=eq."+room.id,{method:"DELETE"});if(r.ok){await load();setNotice("Oda silindi.");}else setNotice("Oda silinemedi.");};
  const inputClass="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white text-slate-900";
  return <div className="space-y-6">
@@ -179,6 +226,15 @@ export default function RoomsAdmin({token}:{token:string}){
               <p className="text-center text-sm mt-2">
                 Fotoğraf {index + 1}
               </p>
+             <button
+  type="button"
+  onClick={() => removeGalleryImage(index)}
+  disabled={saving}
+  className="mt-2 w-full bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50"
+>
+  Sil
+</button>
+
             </div>
           ))}
         </div>
