@@ -190,7 +190,9 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
     <img src={natureGalleryImages[natureIndex]} alt="Gölköy Yaşam Resort doğal yaşam" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
     <button type="button" onClick={prevNature} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">‹</button>
     <button type="button" onClick={nextNature} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl flex items-center justify-center hover:bg-black/75">›</button>
-    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{{natureIndex+1} / {natureGalleryImages.length}</div>
+   
+<div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{natureIndex+1} / {natureGalleryImages.length}</div>
+
    </div>
   </div>}
   {gameOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setGameOpen(false)}>
