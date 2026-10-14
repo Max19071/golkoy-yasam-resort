@@ -38,3 +38,124 @@ html {
 .animate-pulse-star {
   animation: pulse-star 2s ease-in-out infinite;
 }
+
+
+/* Gölköy Yaşam Resort — RAL 6001 inspired visual refresh.
+   Presentation only: room data, prices, images and galleries remain untouched. */
+:root {
+  --golkoy-green: #287233; /* RAL 6001 emerald green */
+  --golkoy-deep: #17572b;
+  --golkoy-cream: #fff8e8;
+}
+#rooms, #services { scroll-margin-top: 5rem; }
+#rooms { background: #f7faf8; }
+#services { background: #fff; }
+#rooms > div, #services > div { max-width: 1400px; }
+#rooms .text-center.mb-12, #services .text-center.mb-12 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem 2rem;
+  text-align: left;
+  padding: 1.15rem 1.75rem;
+  border-radius: 1rem;
+  background: linear-gradient(115deg, var(--golkoy-deep), var(--golkoy-green));
+  color: white;
+  box-shadow: 0 8px 22px rgba(18, 73, 37, .17);
+  border: 1px solid rgba(255,255,255,.18);
+}
+#rooms .text-center.mb-12 > span, #services .text-center.mb-12 > span {
+  color: #e4efc3;
+  font-size: .8rem;
+  letter-spacing: .16em;
+  font-weight: 700;
+}
+#rooms .text-center.mb-12 h2, #services .text-center.mb-12 h2 {
+  color: white;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.75rem, 3vw, 2.65rem);
+  line-height: 1.18;
+  margin: 0;
+  letter-spacing: -.02em;
+}
+#rooms .text-center.mb-12::after, #services .text-center.mb-12::after {
+  content: '✦  Doğanın içinde, huzurlu bir deneyim';
+  font-size: .9rem;
+  color: #f1f8e9;
+  margin-left: auto;
+}
+#rooms .grid > article {
+  border: 1px solid #e0e9e1;
+  border-radius: 1.35rem;
+  box-shadow: 0 8px 24px rgba(18, 63, 40, .12);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+#rooms .grid > article:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(18, 63, 40, .18);
+}
+#rooms .grid > article > button:first-child { overflow: hidden; }
+#rooms .grid > article > button:first-child img {
+  transition: transform .35s ease;
+  border-bottom: 3px solid var(--golkoy-green);
+}
+#rooms .grid > article > button:first-child:hover img { transform: scale(1.025); }
+#rooms article h3, #services .grid h3 {
+  color: #143e28;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+#rooms article .bg-amber-50 {
+  background: var(--golkoy-cream);
+  border: 1px solid #f3ebd8;
+  border-radius: .95rem;
+}
+#rooms article button.text-amber-700 {
+  display: block;
+  width: 100%;
+  padding: .9rem 1.2rem;
+  background: linear-gradient(110deg, var(--golkoy-deep), var(--golkoy-green));
+  border-radius: .85rem;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(18, 73, 37, .15);
+}
+#rooms article button.text-amber-700:hover { background: #104a24; text-decoration: none; }
+#services .grid {
+  gap: 1.25rem;
+}
+#services .grid > button, #services .grid > div {
+  background: #fff;
+  border: 1px solid #e1eae3;
+  border-radius: 1.1rem;
+  overflow: hidden;
+  box-shadow: 0 7px 20px rgba(18, 63, 40, .10);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+#services .grid > button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(18, 63, 40, .17);
+}
+#services .grid > button img, #services .grid > div img {
+  border-bottom: 3px solid var(--golkoy-green);
+  transition: transform .35s ease;
+}
+#services .grid > button:hover img { transform: scale(1.025); }
+#services .grid > button > div, #services .grid > div > div { padding: 1.15rem; }
+#services .grid h3 { font-size: 1.3rem; }
+#services .grid p { color: #64746a; }
+@media (min-width: 1280px) {
+  #services .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  #services .grid > div.md\\:col-start-2 { grid-column-start: auto; }
+}
+@media (max-width: 640px) {
+  #rooms .text-center.mb-12, #services .text-center.mb-12 { padding: 1.1rem; }
+  #rooms .text-center.mb-12::after, #services .text-center.mb-12::after {
+    width: 100%; margin: 0; font-size: .8rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #rooms .grid > article, #services .grid > button,
+  #rooms article img, #services .grid img { transition: none; }
+}
