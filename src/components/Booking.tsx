@@ -1,3 +1,4 @@
+import {useSiteTexts} from "./useSiteTexts";
 import { useEffect, useRef, useState } from 'react';
 type BookingRoom = {
   id: number;
@@ -5,6 +6,7 @@ type BookingRoom = {
   capacity: number;
 };
 export default function Booking() {
+  const t=useSiteTexts();
   const [submitted, setSubmitted] = useState(false);
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
@@ -168,8 +170,8 @@ useEffect(() => {
               <div className="inline-block px-4 py-2 bg-amber-100 rounded-full mb-4">
                 <span className="text-amber-600 font-medium text-sm">İLETİŞİM & REZERVASYON</span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"><span className="text-amber-500">Hemen</span> Rezervasyon Yapın</h2>
-              <p className="text-lg text-gray-600">Tatilinizi planlamaya bugün başlayın! Profesyonel ekibimiz size en uygun seçenekleri sunmak için hazır.</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{t("booking_heading","Hemen Rezervasyon Yapın")}</h2>
+              <p className="text-lg text-gray-600">{t("booking_description","Tatilinizi planlamaya bugün başlayın! Profesyonel ekibimiz size en uygun seçenekleri sunmak için hazır.")}</p>
             </div>
 
             <div className="space-y-4">
