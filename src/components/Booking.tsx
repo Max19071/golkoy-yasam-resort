@@ -6,6 +6,15 @@ type BookingRoom = {
 };
 export default function Booking() {
   const [submitted, setSubmitted] = useState(false);
+  const [checkInDate, setCheckInDate] = useState('');
+  const [checkOutDate, setCheckOutDate] = useState('');
+  const today = new Date();
+  const todayLocal = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')].join('-');
+  const nextDay = (date: string) => {
+    const [year, month, day] = date.split('-').map(Number);
+    const result = new Date(year, month - 1, day + 1);
+    return [result.getFullYear(), String(result.getMonth() + 1).padStart(2, '0'), String(result.getDate()).padStart(2, '0')].join('-');
+  };
   const [roomOptions, setRoomOptions] = useState<BookingRoom[]>([]);
 const [roomsLoading, setRoomsLoading] = useState(true);
 const [selectedRoomName, setSelectedRoomName] = useState('');
@@ -98,6 +107,10 @@ useEffect(() => {
 
     const checkIn = String(data.get('checkIn') || '');
     const checkOut = String(data.get('checkOut') || '');
+    if (checkIn < todayLocal) {
+      setError('Giriş tarihi bugünden önce olamaz.');
+      return;
+    }
     if (checkOut <= checkIn) {
       setError('Çıkış tarihi, giriş tarihinden sonra olmalıdır.');
       return;
@@ -134,6 +147,8 @@ useEffect(() => {
 
       setSubmitted(true);
       form.reset();
+      setCheckInDate('');
+      setCheckOutDate('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu. Lütfen tekrar deneyin.');
     } finally {
@@ -211,8 +226,8 @@ useEffect(() => {
 ))}</select></label>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Giriş Tarihi</span><input required name="checkIn" type="date" className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
-                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Çıkış Tarihi</span><input required name="checkOut" type="date" className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Giriş Tarihi</span><input required name="checkIn" type="date" min={todayLocal} value={checkInDate} onChange={(e) => { const value = e.target.value; setCheckInDate(value); if (checkOutDate && value && checkOutDate <= value) setCheckOutDate(''); }} className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
+                  <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Çıkış Tarihi</span><input required name="checkOut" type="date" min={nextDay(checkInDate || todayLocal)} value={checkOutDate} onChange={(e) => setCheckOutDate(e.target.value)} className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
                 </div>
                 <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Misafir Sayısı</span><select name="guests" key={selectedRoomName} className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option value="">Seçiniz</option>
 {roomOptions
