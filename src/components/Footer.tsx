@@ -19,7 +19,7 @@ export default function Footer() {
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-6">Hizmetler</h3>
-            <ul className="space-y-3 text-gray-400"><li>Oda Rezervasyonu</li><li>Restoran & Bar</li><li>Havuz</li><li>Binicilik</li><li>Tenis</li><li>Transfer</li></ul>
+            <ul className="space-y-3 text-gray-400"><li>Oda Rezervasyonu</li><li>Restoran & Bar</li><li>Havuz</li><li>Binicilik</li><li>Tenis</li><li>Düğün Organizasyonu</li><li>Transfer</li></ul>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-6">İletişim</h3>
