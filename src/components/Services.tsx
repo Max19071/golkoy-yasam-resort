@@ -45,6 +45,10 @@ export default function Services(){
 }, []);
  const [cardIndices, setCardIndices] = useState<Record<string, number>>({});
  const [weddingOpen, setWeddingOpen] = useState(false);
+ const [weddingIndex, setWeddingIndex] = useState(0);
+ const weddingGalleryImages = [weddingImage, ...galeriFotograflari.filter(foto => foto.category === "Düğün Organizasyonu").map(foto => foto.image_url)];
+ const nextWedding = () => setWeddingIndex(i => (i + 1) % weddingGalleryImages.length);
+ const prevWedding = () => setWeddingIndex(i => (i - 1 + weddingGalleryImages.length) % weddingGalleryImages.length);
  const [restaurantOpen,setRestaurantOpen]=useState(false);
  const [restaurantIndex,setRestaurantIndex]=useState(0);
  const restaurantGalleryImages = [
@@ -145,6 +149,7 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
      { key: 'manej', count: manejGaleriResimleri.length },
      { key: 'game', count: oyunGaleriResimleri.length },
      { key: 'children', count: cocukGaleriResimleri.length },
+     { key: 'wedding', count: weddingGalleryImages.length },
    ];
    const timers = categories.filter(({ count }) => count > 1).map(({ key, count }) => {
      const advance = () => {
@@ -166,7 +171,7 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
      };
    });
    return () => timers.forEach(stop => stop());
- }, [restaurantGalleryImages.length, havuzGaleriResimleri.length, natureGalleryImages.length, tenisGaleriResimleri.length, manejGaleriResimleri.length, oyunGaleriResimleri.length, cocukGaleriResimleri.length]);
+ }, [restaurantGalleryImages.length, havuzGaleriResimleri.length, natureGalleryImages.length, tenisGaleriResimleri.length, manejGaleriResimleri.length, oyunGaleriResimleri.length, cocukGaleriResimleri.length, weddingGalleryImages.length]);
  useEffect(() => {
    if (!restaurantOpen || restaurantGalleryImages.length < 2) return;
    const timer = window.setInterval(() => setRestaurantIndex(i => (i + 1) % restaurantGalleryImages.length), 5000);
@@ -203,6 +208,11 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
    return () => window.clearInterval(timer);
  }, [natureOpen, natureGalleryImages.length]);
  
+ useEffect(() => {
+   if (!weddingOpen || weddingGalleryImages.length < 2) return;
+   const timer = window.setInterval(() => setWeddingIndex(i => (i + 1) % weddingGalleryImages.length), 5000);
+   return () => window.clearInterval(timer);
+ }, [weddingOpen, weddingGalleryImages.length]);
  return <section id="services" className="py-20 bg-white"><div className="max-w-6xl mx-auto px-4">
   <div className="text-center mb-12"><span className="text-amber-600 font-semibold">HİZMETLER</span><h2 className="text-4xl font-bold mt-3">Misafirlerimiz İçin</h2></div>
   <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">{items.map(x=>x==="Restoran"?
@@ -241,8 +251,8 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
     <div className="p-6"><h3 className="text-xl font-semibold">Çocuk Oyun Alanı</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
    :x==="Düğün Organizasyonu"?
-   <button key={x} type="button" onClick={() => setWeddingOpen(true)} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer md:col-start-2">
-    <img src={weddingImage} alt="Gölköy Yaşam Resort düğün organizasyonu" className="w-full h-48 object-cover"/>
+   <button key={x} type="button" onClick={() => {setWeddingIndex(0);setWeddingOpen(true)}} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer md:col-start-2">
+    <img src={weddingGalleryImages[(cardIndices.wedding ?? 0) % weddingGalleryImages.length]} alt="Gölköy Yaşam Resort düğün organizasyonu" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Düğün Organizasyonu</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
    :<div key={x} className="p-8 rounded-2xl border bg-slate-50"><h3 className="text-xl font-semibold">{x}</h3></div>)}</div>
@@ -316,7 +326,8 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
   {weddingOpen && <div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={() => setWeddingOpen(false)}>
    <div className="relative max-w-5xl w-full" onClick={e => e.stopPropagation()}>
     <button type="button" onClick={() => setWeddingOpen(false)} aria-label="Kapat" className="absolute -top-12 right-0 text-white text-4xl leading-none">×</button>
-    <img src={weddingImage} alt="Gölköy Yaşam Resort düğün organizasyonu" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    <img src={weddingGalleryImages[weddingIndex]} alt="Gölköy Yaşam Resort düğün organizasyonu" className="w-full max-h-[82vh] object-contain rounded-2xl"/>
+    {weddingGalleryImages.length > 1 && <><button type="button" onClick={prevWedding} aria-label="Önceki fotoğraf" className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl">‹</button><button type="button" onClick={nextWedding} aria-label="Sonraki fotoğraf" className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/55 text-white text-4xl">›</button><div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/55 text-white text-sm">{weddingIndex + 1} / {weddingGalleryImages.length}</div></>}
    </div>
   </div>}
  </div></section>
