@@ -3,7 +3,7 @@ export default function About(){
  const t=useSiteTexts();
  return <section id="about" className="py-20 bg-white">
   <div className="max-w-7xl mx-auto px-4">
-   <div className="resort-section-banner mb-10"><div><span>HAKKIMIZDA</span><h2>Gölköy Yaşam Resort</h2></div><p>Doğanın İçinde, Şehrin Hemen Yanında</p></div>
+   <div className="resort-section-banner mb-10"><div><span>HAKKIMIZDA</span><h2>Gölköy Yaşam Resort</h2></div><p>{t("about_heading","Doğanın İçinde, Şehrin Hemen Yanında")}</p></div>
    <div className="grid md:grid-cols-2 gap-10 items-center">
    <div>
     <h3 className="text-xl font-semibold text-gray-800 mb-6">{t("about_heading","Doğanın İçinde, Şehrin Hemen Yanında…")}</h3>
