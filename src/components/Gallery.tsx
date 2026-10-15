@@ -30,6 +30,7 @@ export default function Gallery(){
   {loadError&&<p role="status" className="mb-5 text-sm text-amber-800">Galeri kayıtları şu anda yüklenemiyor; tesisin mevcut fotoğrafları gösteriliyor.</p>}
   <div className="grid md:grid-cols-3 gap-4">
    {(loaded && !loadError && addedImages.length>0 ? [] : originalImages).map((src,i)=><img key={src} src={src} alt={"Gölköy Yaşam Resort tesis fotoğrafı "+(i+1)} loading="lazy" className="w-full h-72 object-cover rounded-2xl"/>)}
+   <img src="./etkili%20d%C3%BC%C4%9F%C3%BCn.jpg" alt="Gölköy Yaşam Resort Düğün Organizasyonu" loading="lazy" className="w-full h-72 object-cover rounded-2xl"/>
    {addedImages.map(photo=><img key={"gallery-"+photo.id} src={photo.image_url} alt={photo.alt_text||photo.title||"Gölköy Yaşam Resort fotoğrafı"} loading="lazy" className="w-full h-72 object-cover rounded-2xl"/>)}
   </div>
  </div></section>;
