@@ -8,11 +8,13 @@ import Booking from './components/Booking';
 import GuestExperiences from './components/GuestExperiences';
 import Footer from './components/Footer';
 import AdminPanel from './components/AdminPanel';
+import PasswordReset, {isRecoveryLink} from './components/PasswordReset';
 export default function App() {
     const params = new URLSearchParams(window.location.search);
     const isAdmin = params.get('admin') === '1';
     const isReviewsPage = params.get('yorumlar') === '1';
 
+  if (isRecoveryLink()) return <PasswordReset />;
   if (isAdmin) {
     return <AdminPanel />;
   }
