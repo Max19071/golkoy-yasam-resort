@@ -24,6 +24,12 @@ jobs:
           node-version: 20
       - run: npm install --no-audit --no-fund
       - run: npm run build
+      - name: Save Natro hosting files
+        uses: actions/upload-artifact@v4
+        with:
+          name: golkoy-natro-yayin
+          path: ./dist/
+          retention-days: 30
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
