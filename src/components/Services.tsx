@@ -43,6 +43,7 @@ export default function Services(){
 
   return () => controller.abort();
 }, []);
+ const [cardIndex, setCardIndex] = useState(0);
  const [restaurantOpen,setRestaurantOpen]=useState(false);
  const [restaurantIndex,setRestaurantIndex]=useState(0);
  const restaurantGalleryImages = [
@@ -132,41 +133,83 @@ const natureGalleryImages = [
  const nextRestaurant = () => setRestaurantIndex(i => (i + 1) % restaurantGalleryImages.length);
 const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryImages.length) % restaurantGalleryImages.length);
  
+
+ // Rotate service-card previews and whichever enlarged gallery is open.
+ useEffect(() => {
+   const timer = window.setInterval(() => setCardIndex(i => i + 1), 5000);
+   return () => window.clearInterval(timer);
+ }, []);
+ useEffect(() => {
+   if (!restaurantOpen || restaurantGalleryImages.length < 2) return;
+   const timer = window.setInterval(() => setRestaurantIndex(i => (i + 1) % restaurantGalleryImages.length), 5000);
+   return () => window.clearInterval(timer);
+ }, [restaurantOpen, restaurantGalleryImages.length]);
+ useEffect(() => {
+   if (!poolOpen || havuzGaleriResimleri.length < 2) return;
+   const timer = window.setInterval(() => setPoolIndex(i => (i + 1) % havuzGaleriResimleri.length), 5000);
+   return () => window.clearInterval(timer);
+ }, [poolOpen, havuzGaleriResimleri.length]);
+ useEffect(() => {
+   if (!courtOpen || tenisGaleriResimleri.length < 2) return;
+   const timer = window.setInterval(() => setCourtIndex(i => (i + 1) % tenisGaleriResimleri.length), 5000);
+   return () => window.clearInterval(timer);
+ }, [courtOpen, tenisGaleriResimleri.length]);
+ useEffect(() => {
+   if (!manejOpen || manejGaleriResimleri.length < 2) return;
+   const timer = window.setInterval(() => setManejIndex(i => (i + 1) % manejGaleriResimleri.length), 5000);
+   return () => window.clearInterval(timer);
+ }, [manejOpen, manejGaleriResimleri.length]);
+ useEffect(() => {
+   if (!gameOpen || oyunGaleriResimleri.length < 2) return;
+   const timer = window.setInterval(() => setGameIndex(i => (i + 1) % oyunGaleriResimleri.length), 5000);
+   return () => window.clearInterval(timer);
+ }, [gameOpen, oyunGaleriResimleri.length]);
+ useEffect(() => {
+   if (!childrenOpen || cocukGaleriResimleri.length < 2) return;
+   const timer = window.setInterval(() => setChildrenIndex(i => (i + 1) % cocukGaleriResimleri.length), 5000);
+   return () => window.clearInterval(timer);
+ }, [childrenOpen, cocukGaleriResimleri.length]);
+ useEffect(() => {
+   if (!natureOpen || natureGalleryImages.length < 2) return;
+   const timer = window.setInterval(() => setNatureIndex(i => (i + 1) % natureGalleryImages.length), 5000);
+   return () => window.clearInterval(timer);
+ }, [natureOpen, natureGalleryImages.length]);
+ 
  return <section id="services" className="py-20 bg-white"><div className="max-w-6xl mx-auto px-4">
   <div className="text-center mb-12"><span className="text-amber-600 font-semibold">HİZMETLER</span><h2 className="text-4xl font-bold mt-3">Misafirlerimiz İçin</h2></div>
   <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">{items.map(x=>x==="Restoran"?
    <button key={x} type="button" onClick={openRestaurant} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={restaurantImages[0]} alt="Gölköy Yaşam Resort restoran ve sahne" className="w-full h-48 object-cover"/>
+    <img src={restaurantGalleryImages[cardIndex % restaurantGalleryImages.length]} alt="Gölköy Yaşam Resort restoran ve sahne" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Restoran</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Açık Havuz"?
    <button key={x} type="button" onClick={openPool} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={poolImages[0]} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
+    <img src={havuzGaleriResimleri[cardIndex % havuzGaleriResimleri.length]} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Açık Havuz</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Doğallığı Yaşayın"?
    <button key={x} type="button" onClick={openNature} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={natureImages[0]} alt="Gölköy Yaşam Resort doğal yaşam alanı" className="w-full h-48 object-cover"/>
+    <img src={natureGalleryImages[cardIndex % natureGalleryImages.length]} alt="Gölköy Yaşam Resort doğal yaşam alanı" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Doğallığı Yaşayın</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Tenis Kortu"?
    <button key={x} type="button" onClick={openCourt} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={courtImages[0]} alt="Gölköy Yaşam Resort tenis kortu" className="w-full h-48 object-cover"/>
+    <img src={tenisGaleriResimleri[cardIndex % tenisGaleriResimleri.length]} alt="Gölköy Yaşam Resort tenis kortu" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Tenis Kortu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Manej"?
    <button key={x} type="button" onClick={openManej} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
-    <img src={manejImage} alt="Gölköy Yaşam Resort manej" className="w-full h-48 object-cover"/>
+    <img src={manejGaleriResimleri[cardIndex % manejGaleriResimleri.length]} alt="Gölköy Yaşam Resort manej" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Manej</h3></div>
    </button>
    :x==="Oyun Salonu"?
    <button key={x} type="button" onClick={openGame} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={oyunGaleriResimleri[0]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full h-48 object-cover"/>
+    <img src={oyunGaleriResimleri[cardIndex % oyunGaleriResimleri.length]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Oyun Salonu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Çocuk Oyun Alanı"?
    <button key={x} type="button" onClick={()=>setChildrenOpen(true)} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={childrenImage} alt="Gölköy Yaşam Resort çocuk oyun alanı" className="w-full h-48 object-cover"/>
+    <img src={cocukGaleriResimleri[cardIndex % cocukGaleriResimleri.length]} alt="Gölköy Yaşam Resort çocuk oyun alanı" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Çocuk Oyun Alanı</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
    :x==="Resepsiyon"?
