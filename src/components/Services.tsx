@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Doğallığı Yaşayın","Oyun Salonu","Çocuk Oyun Alanı","Resepsiyon"];
+const items=["Restoran","Açık Havuz","Manej","Tenis Kortu","Doğallığı Yaşayın","Oyun Salonu","Çocuk Oyun Alanı","Düğün Organizasyonu"];
 const restaurantImages=["./etkili%20restorant%20sahne.jpg","./etkili%20restorant.jpg"];
 const poolImages=["./etkili%20havuz.jpg","./etkili%20havuz1.jpg"];
 const manejImage = "./etkili%20manej%20ikili.jpg";
@@ -10,7 +10,7 @@ const natureImages=["./etkili%20do%C4%9Fal%20ya%C5%9Fam.jpg","./etkili%20do%C4%9
 const gameImages=["./etkili%20%C5%9F%C3%B6mine.jpg","./etkili%20oyun%20salonu2.jpg","./etkili%20oyun%20salonu3.jpg"];
 const childrenImage="./etkili%20%C3%A7ocuk%20alan%C4%B11.jpg";
 const childrenImages = [childrenImage];
-const receptionImage="./etkili%20giri%C5%9F.jpg";
+const weddingImage="./etkili%20d%C3%BC%C4%9F%C3%BCn.jpg";
 
 export default function Services(){
  const [galeriFotograflari, setGaleriFotograflari] = useState<
@@ -239,10 +239,10 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
     <img src={cocukGaleriResimleri[(cardIndices.children ?? 0) % cocukGaleriResimleri.length]} alt="Gölköy Yaşam Resort çocuk oyun alanı" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Çocuk Oyun Alanı</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
-   :x==="Resepsiyon"?
+   :x==="Düğün Organizasyonu"?
    <div key={x} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm md:col-start-2">
-    <img src={receptionImage} alt="Gölköy Yaşam Resort resepsiyon girişi" className="w-full h-48 object-cover"/>
-    <div className="p-6"><h3 className="text-xl font-semibold">Resepsiyon</h3><p className="mt-2 text-sm text-gray-500">0366 252 85 89</p></div>
+    <img src={weddingImage} alt="Gölköy Yaşam Resort düğün organizasyonu" className="w-full h-48 object-cover"/>
+    <div className="p-6"><h3 className="text-xl font-semibold">Düğün Organizasyonu</h3></div>
    </div>
    :<div key={x} className="p-8 rounded-2xl border bg-slate-50"><h3 className="text-xl font-semibold">{x}</h3></div>)}</div>
   {restaurantOpen&&<div className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4" onClick={()=>setRestaurantOpen(false)}>
