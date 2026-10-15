@@ -43,7 +43,7 @@ export default function Services(){
 
   return () => controller.abort();
 }, []);
- const [cardIndex, setCardIndex] = useState(0);
+ const [cardIndices, setCardIndices] = useState<Record<string, number>>({});
  const [restaurantOpen,setRestaurantOpen]=useState(false);
  const [restaurantIndex,setRestaurantIndex]=useState(0);
  const restaurantGalleryImages = [
@@ -136,9 +136,36 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
 
  // Rotate service-card previews and whichever enlarged gallery is open.
  useEffect(() => {
-   const timer = window.setInterval(() => setCardIndex(i => i + 1), 5000);
-   return () => window.clearInterval(timer);
- }, []);
+   const categories = [
+     { key: 'restaurant', count: restaurantGalleryImages.length },
+     { key: 'pool', count: havuzGaleriResimleri.length },
+     { key: 'nature', count: natureGalleryImages.length },
+     { key: 'court', count: tenisGaleriResimleri.length },
+     { key: 'manej', count: manejGaleriResimleri.length },
+     { key: 'game', count: oyunGaleriResimleri.length },
+     { key: 'children', count: cocukGaleriResimleri.length },
+   ];
+   const timers = categories.filter(({ count }) => count > 1).map(({ key, count }) => {
+     const advance = () => {
+       setCardIndices(previous => {
+         const current = previous[key] ?? 0;
+         const offset = 1 + Math.floor(Math.random() * (count - 1));
+         return { ...previous, [key]: (current + offset) % count };
+       });
+     };
+     const initialDelay = 1000 + Math.random() * 4000;
+     let interval: number | undefined;
+     const timeout = window.setTimeout(() => {
+       advance();
+       interval = window.setInterval(advance, 5000);
+     }, initialDelay);
+     return () => {
+       window.clearTimeout(timeout);
+       if (interval !== undefined) window.clearInterval(interval);
+     };
+   });
+   return () => timers.forEach(stop => stop());
+ }, [restaurantGalleryImages.length, havuzGaleriResimleri.length, natureGalleryImages.length, tenisGaleriResimleri.length, manejGaleriResimleri.length, oyunGaleriResimleri.length, cocukGaleriResimleri.length]);
  useEffect(() => {
    if (!restaurantOpen || restaurantGalleryImages.length < 2) return;
    const timer = window.setInterval(() => setRestaurantIndex(i => (i + 1) % restaurantGalleryImages.length), 5000);
@@ -179,37 +206,37 @@ const prevRestaurant = () => setRestaurantIndex(i => (i - 1 + restaurantGalleryI
   <div className="text-center mb-12"><span className="text-amber-600 font-semibold">HİZMETLER</span><h2 className="text-4xl font-bold mt-3">Misafirlerimiz İçin</h2></div>
   <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">{items.map(x=>x==="Restoran"?
    <button key={x} type="button" onClick={openRestaurant} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={restaurantGalleryImages[cardIndex % restaurantGalleryImages.length]} alt="Gölköy Yaşam Resort restoran ve sahne" className="w-full h-48 object-cover"/>
+    <img src={restaurantGalleryImages[(cardIndices.restaurant ?? 0) % restaurantGalleryImages.length]} alt="Gölköy Yaşam Resort restoran ve sahne" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Restoran</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Açık Havuz"?
    <button key={x} type="button" onClick={openPool} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={havuzGaleriResimleri[cardIndex % havuzGaleriResimleri.length]} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
+    <img src={havuzGaleriResimleri[(cardIndices.pool ?? 0) % havuzGaleriResimleri.length]} alt="Gölköy Yaşam Resort açık havuz" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Açık Havuz</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Doğallığı Yaşayın"?
    <button key={x} type="button" onClick={openNature} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={natureGalleryImages[cardIndex % natureGalleryImages.length]} alt="Gölköy Yaşam Resort doğal yaşam alanı" className="w-full h-48 object-cover"/>
+    <img src={natureGalleryImages[(cardIndices.nature ?? 0) % natureGalleryImages.length]} alt="Gölköy Yaşam Resort doğal yaşam alanı" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Doğallığı Yaşayın</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Tenis Kortu"?
    <button key={x} type="button" onClick={openCourt} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={tenisGaleriResimleri[cardIndex % tenisGaleriResimleri.length]} alt="Gölköy Yaşam Resort tenis kortu" className="w-full h-48 object-cover"/>
+    <img src={tenisGaleriResimleri[(cardIndices.court ?? 0) % tenisGaleriResimleri.length]} alt="Gölköy Yaşam Resort tenis kortu" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Tenis Kortu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Manej"?
    <button key={x} type="button" onClick={openManej} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm">
-    <img src={manejGaleriResimleri[cardIndex % manejGaleriResimleri.length]} alt="Gölköy Yaşam Resort manej" className="w-full h-48 object-cover"/>
+    <img src={manejGaleriResimleri[(cardIndices.manej ?? 0) % manejGaleriResimleri.length]} alt="Gölköy Yaşam Resort manej" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Manej</h3></div>
    </button>
    :x==="Oyun Salonu"?
    <button key={x} type="button" onClick={openGame} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={oyunGaleriResimleri[cardIndex % oyunGaleriResimleri.length]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full h-48 object-cover"/>
+    <img src={oyunGaleriResimleri[(cardIndices.game ?? 0) % oyunGaleriResimleri.length]} alt="Gölköy Yaşam Resort oyun salonu" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Oyun Salonu</h3><p className="mt-2 text-sm text-gray-500">Görselleri açmak için tıklayın</p></div>
    </button>
    :x==="Çocuk Oyun Alanı"?
    <button key={x} type="button" onClick={()=>setChildrenOpen(true)} className="text-left rounded-2xl border bg-slate-50 overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer">
-    <img src={cocukGaleriResimleri[cardIndex % cocukGaleriResimleri.length]} alt="Gölköy Yaşam Resort çocuk oyun alanı" className="w-full h-48 object-cover"/>
+    <img src={cocukGaleriResimleri[(cardIndices.children ?? 0) % cocukGaleriResimleri.length]} alt="Gölköy Yaşam Resort çocuk oyun alanı" className="w-full h-48 object-cover"/>
     <div className="p-6"><h3 className="text-xl font-semibold">Çocuk Oyun Alanı</h3><p className="mt-2 text-sm text-gray-500">Görseli açmak için tıklayın</p></div>
    </button>
    :x==="Resepsiyon"?
