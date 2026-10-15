@@ -195,6 +195,26 @@ useEffect(() => {
                 <p className="font-medium">0530 717 06 37</p>
               </div>
             </div>
+            <div className="p-6 bg-white rounded-2xl shadow-lg">
+              <h3 className="font-semibold text-gray-900 mb-4">Google Haritalar – Gölköy Yaşam Resort</h3>
+              <iframe
+                title="Gölköy Yaşam Resort konum haritası"
+                src="https://maps.google.com/maps?q=G%C3%B6lk%C3%B6y%20Ya%C5%9Fam%20Resort%20Kastamonu&output=embed"
+                width="100%"
+                height="300"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="rounded-xl"
+                allowFullScreen
+              />
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=G%C3%B6lk%C3%B6y%20Ya%C5%9Fam%20Resort%20Kastamonu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-4 text-amber-700 font-semibold hover:underline"
+              >Google Haritalar'da Aç ↗</a>
+            </div>
           </div>
 
           <div className="bg-white rounded-3xl p-8 shadow-2xl">
