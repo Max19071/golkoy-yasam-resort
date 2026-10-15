@@ -6,7 +6,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div className="space-y-6">
             <div className="flex items-center gap-3"><div className="bg-white rounded-xl p-1"><img src="./amblem.jpg" alt="Gölköy Yaşam Resort amblemi" className="w-16 h-16 object-contain" /></div><div className="text-2xl font-bold">Gölköy Yaşam Resort</div></div>
-            <p className="text-gray-400 leading-relaxed">25 yıldan fazla deneyimimizle, misafirlerimize unutulmaz tatil deneyimleri sunuyoruz. Konfor, kalite ve hizmet bir arada.</p>
+            <p className="text-gray-400 leading-relaxed">15 yıldan fazla deneyimimizle, misafirlerimize unutulmaz tatil deneyimleri sunuyoruz. Konfor, kalite ve hizmet bir arada.</p>
             <div className="flex gap-4"><a href="#" className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-amber-500">X</a><a href="#" className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-amber-500">◎</a><a href="#" className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-amber-500">f</a></div>
           </div>
           <div>
@@ -17,7 +17,7 @@ export default function Footer() {
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-6">Hizmetler</h3>
-            <ul className="space-y-3 text-gray-400"><li>Oda Rezervasyonu</li><li>Restoran & Bar</li><li>Spa & Wellness</li><li>Havuz & Spor</li><li>Konferans</li><li>Transfer</li></ul>
+            <ul className="space-y-3 text-gray-400"><li>Oda Rezervasyonu</li><li>Restoran & Bar</li><li>Havuz</li><li>Binicilik</li><li>Tenis</li><li>Transfer</li></ul>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-6">İletişim</h3>
