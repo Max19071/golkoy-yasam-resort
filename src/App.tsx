@@ -9,8 +9,11 @@ import GuestExperiences from './components/GuestExperiences';
 import Footer from './components/Footer';
 import AdminPanel from './components/AdminPanel';
 import PasswordReset, {isRecoveryLink} from './components/PasswordReset';
+import {CookieNotice, PolicyPage, type PolicyKey} from './components/LegalPages';
 export default function App() {
     const params = new URLSearchParams(window.location.search);
+    const policy = params.get('politika');
+    if (policy === 'gizlilik' || policy === 'kullanim' || policy === 'cerezler') return <><PolicyPage kind={policy as PolicyKey} /><CookieNotice /></>;
     const isAdmin = params.get('admin') === '1';
     const isReviewsPage = params.get('yorumlar') === '1';
 
@@ -19,7 +22,7 @@ export default function App() {
     return <AdminPanel />;
   }
   if (isReviewsPage) {
-    return <div className="min-h-screen"><GuestExperiences allReviews /><Footer /></div>;
+    return <div className="min-h-screen"><GuestExperiences allReviews /><Footer /><CookieNotice /></div>;
   }
   return (
     <div className="min-h-screen">
@@ -32,6 +35,7 @@ export default function App() {
       <GuestExperiences />
       <Booking />
       <Footer />
+      <CookieNotice />
     </div>
   );
 }
