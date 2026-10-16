@@ -1,5 +1,9 @@
 import {useSiteTexts} from "./useSiteTexts";
 import { useEffect, useRef, useState } from 'react';
+type BookingBlock = { start_date: string; end_date: string };
+const BLOCKS_URL = "https://pekpyiyivttrjjxsrarx.supabase.co/rest/v1/booking_blocks?select=start_date,end_date";
+const BLOCKS_KEY = "sb_publishable_byqYtROGi5NKkIWiZJ07uw_RMPhuMzS";
+const overlaps = (start: string, end: string, blocks: BookingBlock[]) => Boolean(start && end && blocks.some(b => start <= b.end_date && end > b.start_date));
 type BookingRoom = {
   id: number;
   name: string;
@@ -8,6 +12,11 @@ type BookingRoom = {
 export default function Booking() {
   const t=useSiteTexts();
   const [submitted, setSubmitted] = useState(false);
+  const [blocks, setBlocks] = useState<BookingBlock[]>([]);
+  const [blocksLoaded, setBlocksLoaded] = useState(false);
+  const [blocksError, setBlocksError] = useState(false);
+  useEffect(() => { let active = true; fetch(BLOCKS_URL, {headers:{apikey:BLOCKS_KEY}}).then(r => {if(!r.ok)throw Error("Kapalı tarihler okunamadı");return r.json();}).then((data:BookingBlock[]) => {if(active){setBlocks(data);setBlocksLoaded(true);setBlocksError(false);}}).catch(()=>{if(active){setBlocksLoaded(true);setBlocksError(true);}});return()=>{active=false}; }, []);
+  const datesBlocked = overlaps(checkInDate, checkOutDate, blocks);
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
   const today = new Date();
@@ -118,6 +127,10 @@ useEffect(() => {
       return;
     }
 
+    if (!blocksLoaded || blocksError) { setError("Rezervasyon tarihleri kontrol edilemiyor. Lütfen daha sonra tekrar deneyin veya bizi arayın."); return; }
+    if (overlaps(checkIn,checkOut,blocks)) { setError("Bu tarihlerde doluyuz. Lütfen başka tarihler seçiniz."); return; }
+    // Gönderimden hemen önce güncel kapalı tarihleri yeniden kontrol et.
+    try { const check = await fetch(BLOCKS_URL, {headers:{apikey:BLOCKS_KEY},cache:"no-store"}); if(!check.ok)throw Error(); const current:BookingBlock[] = await check.json(); setBlocks(current); if(overlaps(checkIn,checkOut,current)){setError("Bu tarihlerde doluyuz. Lütfen başka tarihler seçiniz.");return;} } catch {setError("Rezervasyon tarihleri kontrol edilemiyor. Lütfen bizi arayın.");return;}
     if (!turnstileToken) {
       setError('Lütfen güvenlik doğrulamasının tamamlanmasını bekleyin.');
       return;
@@ -222,8 +235,9 @@ useEffect(() => {
             {submitted ? (
               <div className="text-center py-12">
                 <div className="text-5xl mb-5">✓</div>
-                <h4 className="text-2xl font-bold text-gray-900 mb-2">Rezervasyon Alındı!</h4>
+                <h4 className="text-2xl font-bold text-gray-900 mb-2">Rezervasyon Talebiniz Alındı!</h4>
                 <p className="text-gray-600">En kısa sürede sizinle iletişime geçeceğiz.</p>
+                <p className="mt-5 text-lg font-bold text-amber-800">Onaylamak İçin Lütfen <a className="underline" href="tel:+903662528589">0366 252 85 89</a> Arayınız.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -251,6 +265,8 @@ useEffect(() => {
                   <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Giriş Tarihi</span><input required name="checkIn" type="date" min={todayLocal} value={checkInDate} onChange={(e) => { const value = e.target.value; setCheckInDate(value); if (checkOutDate && value && checkOutDate <= value) setCheckOutDate(''); }} className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
                   <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Çıkış Tarihi</span><input required name="checkOut" type="date" min={nextDay(checkInDate || todayLocal)} value={checkOutDate} onChange={(e) => setCheckOutDate(e.target.value)} className="w-full px-4 py-3 border border-slate-200 rounded-xl" /></label>
                 </div>
+                {datesBlocked && <p role="alert" className="text-red-700 bg-red-50 border border-red-200 rounded-xl p-4 font-semibold">Bu tarihlerde doluyuz. Lütfen başka tarihler seçiniz.</p>}
+                {blocksError && <p role="alert" className="text-red-700 bg-red-50 rounded-xl p-4">Kapalı tarihler kontrol edilemiyor. Lütfen telefonla iletişime geçin.</p>}
                 <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Misafir Sayısı</span><select name="guests" key={selectedRoomName} className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white"><option value="">Seçiniz</option>
 {roomOptions
   .filter((room) => room.name === selectedRoomName)
@@ -276,7 +292,7 @@ useEffect(() => {
                 <label className="block"><span className="block text-sm font-medium text-gray-700 mb-2">Mesajınız</span><textarea name="message" rows={4} className="w-full px-4 py-3 border border-slate-200 rounded-xl resize-none" placeholder="Özel isteklerinizi yazabilirsiniz..." /></label>
                 <div ref={turnstileElement} className="min-h-[65px]" aria-label="Güvenlik doğrulaması" />
                 {error && <p role="alert" className="text-red-700 text-sm bg-red-50 rounded-lg p-3">{error}</p>}
-                <button type="submit" disabled={sending || !turnstileToken} className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed">{sending ? "Gönderiliyor..." : "Rezervasyon Gönder →"}</button>
+                <button type="submit" disabled={sending || !turnstileToken || datesBlocked || !blocksLoaded || blocksError} className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed">{sending ? "Gönderiliyor..." : "Rezervasyon Gönder →"}</button>
               </form>
             )}
           </div>
