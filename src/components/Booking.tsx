@@ -236,7 +236,6 @@ useEffect(() => {
               <div className="text-center py-12">
                 <div className="text-5xl mb-5">✓</div>
                 <h4 className="text-2xl font-bold text-gray-900 mb-2">Rezervasyon Talebiniz Alındı!</h4>
-                <p className="text-gray-600">En kısa sürede sizinle iletişime geçeceğiz.</p>
                 <p className="mt-5 text-lg font-bold text-amber-800">Onaylamak İçin Lütfen <a className="underline" href="tel:+903662528589">0366 252 85 89</a> Arayınız.</p>
               </div>
             ) : (
