@@ -6,6 +6,7 @@ import Services from './components/Services';
 import Gallery from './components/Gallery';
 import Booking from './components/Booking';
 import GuestExperiences from './components/GuestExperiences';
+import VisitorCounter from './components/VisitorCounter';
 import Footer from './components/Footer';
 import AdminPanel from './components/AdminPanel';
 import PasswordReset, {isRecoveryLink} from './components/PasswordReset';
@@ -32,6 +33,7 @@ export default function App() {
       <Rooms />
       <Services />
       <Gallery />
+        <VisitorCounter />
       <GuestExperiences />
       <Booking />
       <Footer />
